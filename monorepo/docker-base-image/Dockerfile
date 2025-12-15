@@ -1,6 +1,6 @@
-from python:3.9-bookworm
+FROM python:3.14-slim-bullseye
 
-maintainer Automat
+LABEL org.opencontainers.image.authors="Automat"
 
 RUN apt-get update && apt-get install -y \
    autossh \

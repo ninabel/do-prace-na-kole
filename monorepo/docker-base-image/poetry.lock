@@ -286,7 +286,7 @@ consul = ["python-consul"]
 cosmosdbsql = ["pydocumentdb (==2.3.2)"]
 couchbase = ["couchbase (<3.0.0)", "couchbase-cffi (<3.0.0)"]
 couchdb = ["pycouchdb"]
-django = ["Django (>=1.11)"]
+django = ["Django (>=)"]
 dynamodb = ["boto3 (>=1.9.178)"]
 elasticsearch = ["elasticsearch"]
 eventlet = ["eventlet (>=0.24.1)"]
@@ -991,7 +991,7 @@ name = "django-advanced-filters"
 version = "2.0.0"
 description = "A Django application for advanced admin filters"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.10"
 files = [
     {file = "django-advanced-filters-2.0.0.tar.gz", hash = "sha256:845c5e7121c9dd68ddcf850a2325e1b5f76f355c677215623bd8974a0359d783"},
     {file = "django_advanced_filters-2.0.0-py3-none-any.whl", hash = "sha256:60a4b224626e042a5ea657600efcdae8d214cf530fd2e6cc3e37d451d777f7a9"},
