@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib.gis import admin
@@ -16,7 +15,7 @@ from rest_framework.documentation import include_docs_urls
 
 admin.autodiscover()
 
-from django.urls import re_path
+from django.urls import include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -45,39 +44,39 @@ class OldLanguageRedirectView(RedirectView):
 
 
 urlpatterns = [
-    url(r"^admin/", include("massadmin.urls")),
-    url(r"^advanced_filters/", include("advanced_filters.urls")),
-    url(r"^su/", include("django_su.urls")),
-    url(r"^selectable/", include("selectable.urls")),
-    url(r"^oauth2/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    path("admin/", include("massadmin.urls")),
+    path("advanced_filters/", include("advanced_filters.urls")),
+    path("su/", include("django_su.urls")),
+    path("selectable/", include("selectable.urls")),
+    path("oauth2/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path("admin_tools_stats/", include("admin_tools_stats.urls")),
-    url(r"^photologue/", include("photologue.urls", namespace="photologue")),
-    url(r"^redactor/", include("redactor.urls")),
-    url(r"^nested_admin/", include("nested_admin.urls")),
-    url(r"^rest/", include(router.urls)),
-    url(r"^rest/photo-url/(?P<photo_url>.+)", PhotoURLGet.as_view()),
-    url(r"^likes/", include("likes.urls")),
-    url(r"^avatar/", include("avatar.urls")),
-    url(r"^api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("photologue/", include("photologue.urls", namespace="photologue")),
+    path("redactor/", include("redactor.urls")),
+    path("nested_admin/", include("nested_admin.urls")),
+    path("rest/", include(router.urls)),
+    re_path(r"^rest/photo-url/(?P<photo_url>.+)", PhotoURLGet.as_view()),
+    path("likes/", include("likes.urls")),
+    path("avatar/", include("avatar.urls")),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api-token-auth/", rest_framework.authtoken.views.obtain_auth_token),
     path("dj-rest-auth/", include("dj_rest_auth.urls")),
-    url(r"^rest-docs/", include_docs_urls(title="Do práce na kole API")),
-    url(r"^", include("dpnk.urls")),
-    url(r"^coupons/", include("coupons.urls")),
-    url(r"^donation/", include("donation_chooser.urls")),
-    url(r"^t_shirt/", include("t_shirt_delivery.urls")),
-    url(
-        r"^robots.txt$",
+    re_path(r"^rest-docs/", include_docs_urls(title="Do práce na kole API")),
+    path("", include("dpnk.urls")),
+    path("coupons/", include("coupons.urls")),
+    path("donation/", include("donation_chooser.urls")),
+    path("t_shirt/", include("t_shirt_delivery.urls")),
+    path(
+        "robots.txt",
         lambda r: HttpResponse("User-agent: *\nAllow:", content_type="text/plain"),
     ),
-    url(r"^", include("favicon.urls")),
-    url(r"^cs/.*$", OldLanguageRedirectView.as_view()),
-    url(r"^register/", include("registration.backends.default.urls")),
-    url(
-        "^inbox/notifications/", include(notifications.urls, namespace="notifications")
+    path("", include("favicon.urls")),
+    re_path(r"^cs/.*$", OldLanguageRedirectView.as_view()),
+    path("register/", include("registration.backends.default.urls")),
+    path(
+        "inbox/notifications/", include(notifications.urls, namespace="notifications")
     ),
-    url(r"^report_builder/", include("report_builder.urls")),
-    url(
+    path("report_builder/", include("report_builder.urls")),
+    re_path(
         r"^" + settings.LOADER_IO_KEY + "/",
         lambda r: HttpResponse(settings.LOADER_IO_KEY, content_type="text/plain"),
     ),
@@ -99,30 +98,30 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 try:
-    urlpatterns.append(url(r"^adminactions/", include("adminactions.urls")))
+    urlpatterns.append(path("adminactions/", include("adminactions.urls")))
 except NameError:
     pass
 
 urlpatterns += i18n_patterns(
-    url(r"^", include("dpnk.urls")),
-    url(r"^", include("t_shirt_delivery.urls")),
-    url(r"^", include("coupons.urls")),
-    url("social/", include("social_django.urls", namespace="social")),
-    url(r"^strava/", include("stravasync.urls")),
-    url(r"^admin/", admin.site.urls),
+    path("", include("dpnk.urls")),
+    path("", include("t_shirt_delivery.urls")),
+    path("", include("coupons.urls")),
+    path("social/", include("social_django.urls", namespace="social")),
+    path("strava/", include("stravasync.urls")),
+    re_path(r"^admin/", admin.site.urls),
     prefix_default_language=False,
 )
 
 if "rosetta" in settings.INSTALLED_APPS:
     urlpatterns += [
-        url(r"^rosetta/", include("rosetta.urls")),
+        path("rosetta/", include("rosetta.urls")),
     ]
 
 try:
     import debug_toolbar
 
     urlpatterns += [
-        url(r"^__debug__/", include(debug_toolbar.urls)),
+        path("__debug__/", include(debug_toolbar.urls)),
     ]
 except ImportError:
     pass
@@ -131,5 +130,5 @@ handler403 = "dpnk.exceptions.permission_denied_view"
 
 if getattr(settings, "SILK", False):
     urlpatterns += [
-        url(r"^silk/", include("silk.urls", namespace="silk")),
+        path("silk/", include("silk.urls", namespace="silk")),
     ]

@@ -49,13 +49,13 @@ django-leaflet = "*"
 gpxpy = "*"
 lxml = "*"
 django-gpxpy = "*"
-django-cachalot = {git = "https://github.com/federicobond/django-cachalot.git", rev = "django-2.2"}
+django-cachalot = "^2.8"
 django-bulk-update = "*"
 django-cors-headers = "*"
 django-denorm = {git = "https://github.com/auto-mat/django-denorm.git", rev = "develop"}
 django-extra-views = "*"
 raven = "*"
-celery = "<=4.4.5"
+celery = "^5.6.0"
 flower = "*"
 django-daterange-filter = "*"
 django-smmapdfs = {git = "https://git@github.com/auto-mat/smmapdfs.git", rev = "master"}

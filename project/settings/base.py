@@ -29,8 +29,8 @@ import django.conf.locale
 from django.contrib.messages import constants as message_constants
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 
 from celery.schedules import crontab
 
@@ -137,7 +137,6 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = ("cs", "dsnkcs", "en")
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 SITE_ID = os.environ.get("DPNK_SITE_ID", 1)
 USE_I18N = True
-USE_L10N = True
 
 IMPORT_EXPORT_TMP_STORAGE_CLASS = "import_export.tmp_storages.MediaStorage"
 
@@ -782,7 +781,7 @@ AVATAR_PROVIDERS = (
 
 def photologue_path(instance, filename):
     fn = (
-        unicodedata.normalize("NFKD", force_text(filename))
+        unicodedata.normalize("NFKD", force_str(filename))
         .encode("ascii", "ignore")
         .decode("ascii")
     )
