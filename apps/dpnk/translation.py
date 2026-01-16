@@ -51,6 +51,7 @@ class CampaignTranslationOptions(TranslationOptions):
         "email_footer",
         "free_entry_cases_html",
         "extra_agreement_text",
+        "description",
     )
 
 
