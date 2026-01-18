@@ -279,6 +279,7 @@ class SubsidiaryTeamSerializer(serpy.Serializer):
 
 
 class SubsidiaryAddressDeserializer(CompaniesDeserializer):
+
     class Meta:
         model = Subsidiary
         fields = (
