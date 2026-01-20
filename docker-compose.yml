@@ -1,8 +1,8 @@
-version: '2'
 services:
  web:
   build:
    context: .
+   args: 
    dockerfile: DockerfileDev
   entrypoint: /bin/bash
   ports:
@@ -74,7 +74,7 @@ services:
  redis:
   image: redis
  postgres:
-  image: mdillon/postgis:9.6-alpine
+  image: postgres:17-bookworm
   volumes:
    - ./db:/var/lib/postgresql/data
   env_file: docker.env
