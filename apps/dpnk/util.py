@@ -34,10 +34,10 @@ from django.contrib.sessions.models import Session
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator
 from django.db import connection, OperationalError, transaction
-from django.utils import timezone, six
-from django.utils.functional import cached_property, lazy
+from django.utils import timezone
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
+from django.utils.functional import keep_lazy
 
 import geopy.distance
 
@@ -47,7 +47,7 @@ from . import exceptions
 
 logger = logging.getLogger(__name__)
 
-mark_safe_lazy = lazy(mark_safe, six.text_type)
+mark_safe_lazy = keep_lazy(str)(mark_safe)
 
 DAYS_EXCLUDE = (
     datetime.date(year=2016, day=5, month=7),
@@ -209,23 +209,26 @@ def get_multilinestring_length(mls):
 
 
 class CustomPaginator(Paginator):
-    @cached_property
     def count(self):
-        try:
+        cache_key = f"page_count:{self.pk}"
+        estimate = cache.get(cache_key)
+        if estimate is None:
+            try:
+                with transaction.atomic(), connection.cursor() as cursor:
+                    # Limit to 150 ms
+                    cursor.execute("SET LOCAL statement_timeout TO 150;")
+                    return super().count
+            except OperationalError:
+                pass
             with transaction.atomic(), connection.cursor() as cursor:
-                # Limit to 150 ms
-                cursor.execute("SET LOCAL statement_timeout TO 150;")
-                return super().count
-        except OperationalError:
-            pass
-        with transaction.atomic(), connection.cursor() as cursor:
-            # Obtain estimated values (only valid with PostgreSQL)
-            cursor.execute(
-                "SELECT reltuples FROM pg_class WHERE relname = %s",
-                [self.object_list.query.model._meta.db_table],
-            )
-            estimate = int(cursor.fetchone()[0])
-            return estimate
+                # Obtain estimated values (only valid with PostgreSQL)
+                cursor.execute(
+                    "SELECT reltuples FROM pg_class WHERE relname = %s",
+                    [self.object_list.query.model._meta.db_table],
+                )
+                estimate = int(cursor.fetchone()[0])
+                cache.set(cache_key, estimate, 60)
+        return estimate
 
 
 def get_all_logged_in_users():

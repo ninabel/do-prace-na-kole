@@ -21,8 +21,7 @@
 import datetime
 import babel
 
-from babel.dates import format_date
-from cache_utils.decorators import cached
+from django.core.cache import cache
 from colorfield.fields import ColorField
 from denorm import denormalized, depend_on_related
 
@@ -31,9 +30,7 @@ from django.contrib.gis.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import Max
 from django.utils.html import escape
-from django.utils.translation import get_language, ugettext_lazy as _
-
-from price_level.models import Pricable
+from django.utils.translation import get_language, gettext_lazy as _
 
 from smmapdfs.models import PdfSandwichType
 
@@ -42,7 +39,7 @@ from .user_attendance import UserAttendance
 from .. import util
 
 
-class Campaign(Pricable, models.Model):
+class Campaign(models.Model):
     """kampaň"""
 
     class Meta:
@@ -352,18 +349,19 @@ class Campaign(Pricable, models.Model):
     def possible_vacation_days(self):
         """Return days, that can be added as vacation"""
 
-        @cached(60)
-        def get_days(pk):
+        cached_key = f"possible_vacation_days:{self.pk}"
+        days = cache.get(cached_key)
+        if days is None:
             competition_phase = self.competition_phase()
-            return [
+            days = [
                 d
                 for d in util.daterange(
                     competition_phase.date_from, competition_phase.date_to
                 )
                 if self.vacation_day_active(d)
             ]
-
-        return get_days(self.pk)
+            cache.set(cached_key, days, 60)
+        return days
 
     def user_attendances_for_delivery(self):
         from t_shirt_delivery.models import PackageTransaction
@@ -390,14 +388,15 @@ class Campaign(Pricable, models.Model):
         )
 
     def get_complementary_school_campaign(self):
-        @cached(60)
-        def get_campaign(pk):
+        cached_key = f"complementary_school_campaign:{self.pk}"
+        campaign = cache.get(cached_key)
+        if campaign is None:
             try:
-                return Campaign.objects.get(year=self.year, campaign_type__slug="skoly")
+                campaign = Campaign.objects.get(year=self.year, campaign_type__slug="skoly")
             except Campaign.DoesNotExist:
-                return None
-
-        return get_campaign(self.pk)
+                campaign = None
+            cache.set(cached_key, campaign, 60)
+        return campaign
 
     def get_complementary_main_campaign(self):
         try:
@@ -427,18 +426,18 @@ class Campaign(Pricable, models.Model):
         @phase_type Type of phase.
         """
 
-        @cached(60)
-        def get_phase(pk, phase_type):
+        cache_key = f"campaign_phase:{self.pk}:{phase_type}"
+        phase = cache.get(cache_key)
+        if phase is None:
             try:
-                return self.phase_set.get(phase_type=phase_type)
+                phase = self.phase_set.get(phase_type=phase_type)
             except Phase.DoesNotExist:
-                return False
-
-        result = get_phase(self.pk, phase_type)
-        if not result:
-            get_phase.invalidate(self.pk, phase_type)
+                phase = False
+            cache.set(cache_key, phase, 60)
+        if not phase:
+            self.phase.invalidate(self.pk, phase_type)
             raise Phase.DoesNotExist
-        return result
+        return phase
 
     def competition_phase(self):
         return self.phase("competition")

@@ -22,7 +22,7 @@ from django.http import Http404
 from django.utils import translation
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from sesame.middleware import AuthenticationMiddleware
 

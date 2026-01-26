@@ -53,7 +53,7 @@ from django.forms import Textarea
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from daterange_filter.filter import DateRangeFilter
 
@@ -1395,12 +1395,6 @@ class OccupationAdmin(ImportExportMixin, SortableAdminMixin, admin.ModelAdmin):
 
 class PhaseInline(admin.TabularInline):
     model = models.Phase
-    extra = 0
-
-
-class PriceLevelInline(admin.TabularInline):
-    readonly_fields = ("created", "author", "updated_by")
-    model = price_level_models.PriceLevel
     extra = 0
 
 

@@ -19,10 +19,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from cache_utils.decorators import cached
-
+from django.core.cache import cache
 from django.contrib.gis.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import translation
 
 from dpnk.util import get_emissions
@@ -90,24 +89,28 @@ class CityInCampaign(models.Model):
         return self.city.name
 
     def competitors(self):
-        @cached(60)
-        def actually_get_competitors(pk):
-            return UserAttendance.objects.filter(
+        cache_key = f"competitors:{self.pk}:{self.campaign.pk}:{self.city.pk}"
+        competitors = cache.get(cache_key)
+        if competitors is None:
+            competitors = UserAttendance.objects.filter(
                 campaign=self.campaign,
                 team__subsidiary__city=self.city,
                 payment_status__in=("done", "no_admission"),
             )
+            cache.set(cache_key, competitors, 60)
+        return competitors
 
-        return actually_get_competitors(self.pk)
+        
 
     def competitor_count(self):
         return len(self.competitors())
 
     def distances(self):
-        @cached(60)
-        def actually_get_distances(pk):
+        cache_key = f"distances:{self.pk}:{self.campaign.pk}:{self.city.pk}"
+        distances = cache.get(cache_key)
+        if distances is None:
             competition_phase = self.campaign.competition_phase()
-            return distance_all_modes(
+            distances = distance_all_modes(
                 Trip.objects.filter(
                     user_attendance__in=self.competitors(),
                     date__range=[
@@ -116,8 +119,7 @@ class CityInCampaign(models.Model):
                     ],
                 ),
             )
-
-        return actually_get_distances(self.pk)
+        return distances
 
     def eco_trip_count(self):
         return self.distances()["count__sum"]
