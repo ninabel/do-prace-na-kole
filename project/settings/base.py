@@ -115,11 +115,11 @@ else:
     }
 
 LOCALE_PATHS = (
-    normpath(PROJECT_ROOT, "avatar_locale/locale"),
+    # normpath(PROJECT_ROOT, "avatar_locale/locale"),
     normpath(PROJECT_ROOT, "dpnk/locale"),
-    normpath(PROJECT_ROOT, "coupons/locale"),
-    normpath(PROJECT_ROOT, "t_shirt_delivery/locale"),
-    normpath(PROJECT_ROOT, "stravasync/locale"),
+    # normpath(PROJECT_ROOT, "coupons/locale"),
+    # normpath(PROJECT_ROOT, "t_shirt_delivery/locale"),
+    # normpath(PROJECT_ROOT, "stravasync/locale"),
     normpath(PROJECT_ROOT, "registration-templates/account/email/locale"),
     normpath(PROJECT_ROOT, "project/settings/locale"),
 )
@@ -330,15 +330,15 @@ INSTALLED_APPS = [
     "project.settings.DjRESTAuthRegistrationConfig",
     "photologue",
     "registration",
-    "price_level",
-    "coupons",
+    "django_prices",
+    # "coupons",
     "dpnk",
-    "t_shirt_delivery",
-    "stravasync",
+    # "t_shirt_delivery",
+    # "stravasync",
     "psc",
     "stale_notifications",
-    "motivation_messages",
-    "donation_chooser",
+    # "motivation_messages",
+    # "donation_chooser",
     "smart_selects",
     "composite_field",
     "softhyphen",
@@ -656,10 +656,6 @@ ALLOWED_HOSTS = os.environ.get("DPNK_ALLOWED_HOSTS", "").split(",")
 
 BROKER_URL = os.environ.get("DPNK_BROKER_URL", "")
 
-MIGRATION_MODULES = {
-    "price_level": "price_level_migrations",
-}
-
 CSRF_COOKIE_SECURE = os.environ.get("DPNK_CSRF_COOKIE_SECURE", True)
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -707,7 +703,6 @@ IGNORABLE_404_URLS = [
 
 FAVICON_PATH = STATIC_URL + "img/favicon/favicon.ico"
 
-PRICE_LEVEL_MODEL = "dpnk.Campaign"
 PRICE_LEVEL_CATEGORY_CHOICES = Choices(
     ("basic", _("Základní")),
     ("company", _("Pro firmy")),
