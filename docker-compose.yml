@@ -2,7 +2,6 @@ services:
  web:
   build:
    context: .
-   args: 
    dockerfile: DockerfileDev
   entrypoint: /bin/bash
   ports:
