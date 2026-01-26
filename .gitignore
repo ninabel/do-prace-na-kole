@@ -65,3 +65,4 @@ tmp_gls/*
 .idea
 *.log
 .vscode
+.cache/*
