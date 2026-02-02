@@ -3839,6 +3839,7 @@ class DataReportResults(UserAttendanceMixin, APIView):
     2. Team regularity in the cities (Company/City organizator),
     3. Organization/city performance (Company/City organizator),
     4. Orgaznizations review
+    5. Organization coordinator
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -3957,6 +3958,14 @@ class DataReportResults(UserAttendanceMixin, APIView):
             url = concat_all(
                 base_url,
             )
+        elif "organization-coordinator" == report_type:
+            base_url = (
+                settings.METABASE_DPNK_ORGANIZATION_COORDINATOR_RESULTS_DATA_REPORT_URL
+            )
+            url = concat_all(
+                base_url,
+            )
+
         return Response({"data_report_url": url})
 
 
