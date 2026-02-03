@@ -27,14 +27,14 @@ from celery import shared_task
 
 import denorm
 
-from dj_fiobank_payments.statement import parse
+# from dj_fiobank_payments.statement import parse
 
 from django.conf import settings
 from django.contrib import contenttypes
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import translation
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from notifications.signals import notify
 
@@ -116,9 +116,9 @@ def touch_teams(self, campaign_slug=""):
     return len(queryset)
 
 
-@shared_task(bind=True)
-def parse_statement(self, days_back=7):
-    parse(days_back=days_back)
+# @shared_task(bind=True)
+# def parse_statement(self, days_back=7):
+#    parse(days_back=days_back)
 
 
 def get_notification_queryset(

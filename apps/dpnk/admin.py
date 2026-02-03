@@ -55,7 +55,7 @@ from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from daterange_filter.filter import DateRangeFilter
+from django_admin_filters import DateRange as DateRangeFilter
 
 from import_export.admin import ExportMixin, ImportExportMixin, ImportMixin
 
@@ -74,11 +74,11 @@ from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from notifications.admin import AdminNotifyActionMixin
+from notifications.admin import AbstractNotificationAdmin
 
 from polymorphic.admin import PolymorphicChildModelAdmin
 
-from price_level import models as price_level_models
+# from price_level import models as price_level_models
 
 from related_admin import RelatedFieldAdmin
 
@@ -838,7 +838,7 @@ class TripAdminInline(admin.TabularInline):
 class UserAttendanceAdmin(
     StaleSyncMixin,
     AdminAdvancedFiltersMixin,
-    AdminNotifyActionMixin,
+    AbstractNotificationAdmin,
     ImportExportMixin,
     city_admin_mixin_generator("team__subsidiary__city__in"),
     RelatedFieldAdmin,
@@ -1527,7 +1527,7 @@ class CampaignAdmin(ImportExportMixin, TranslationAdmin, admin.ModelAdmin):
         TShirtSizeInline,
         PhaseInline,
         CityInCampaignInline,
-        PriceLevelInline,
+        # PriceLevelInline,
     ]
     readonly_fields = (
         "name",

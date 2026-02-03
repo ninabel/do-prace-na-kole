@@ -52,7 +52,7 @@ from donation_chooser.rest import organization_router
 
 from drf_extra_fields.geo_fields import PointField
 
-from memoize import mproperty
+from memoize import memoize
 from notifications.models import Notification
 
 import photologue

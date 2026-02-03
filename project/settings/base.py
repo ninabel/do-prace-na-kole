@@ -117,7 +117,7 @@ else:
 LOCALE_PATHS = (
     # normpath(PROJECT_ROOT, "avatar_locale/locale"),
     normpath(PROJECT_ROOT, "dpnk/locale"),
-    # normpath(PROJECT_ROOT, "coupons/locale"),
+    normpath(PROJECT_ROOT, "coupons/locale"),
     # normpath(PROJECT_ROOT, "t_shirt_delivery/locale"),
     # normpath(PROJECT_ROOT, "stravasync/locale"),
     normpath(PROJECT_ROOT, "registration-templates/account/email/locale"),
@@ -331,13 +331,13 @@ INSTALLED_APPS = [
     "photologue",
     "registration",
     "django_prices",
-    # "coupons",
+    "coupons",
     "dpnk",
     # "t_shirt_delivery",
     # "stravasync",
     "psc",
     "stale_notifications",
-    # "motivation_messages",
+    "motivation_messages",
     # "donation_chooser",
     "smart_selects",
     "composite_field",
@@ -352,7 +352,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "adminsortable2",
     "reportlab",
-    "report_builder",
+    # "report_builder",
     "dbbackup",
     "related_admin",
     "easy_thumbnails",
@@ -371,11 +371,10 @@ INSTALLED_APPS = [
     "bulk_update",
     "denorm",
     "subdomains",
-    "redactor",
     "selectable",
     "raven.contrib.django.raven_compat",
     "bootstrap4",
-    "daterange_filter",
+    "django_admin_filters",
     "storages",
     "favicon",
     "adminactions",
@@ -383,7 +382,7 @@ INSTALLED_APPS = [
     "advanced_filters",
     "djcelery_email",
     "django_celery_beat",
-    "dj_fiobank_payments",
+    # "dj_fiobank_payments",
     "smmapdfs",
     "secretballot",
     "sitetree",
@@ -400,6 +399,7 @@ INSTALLED_APPS = [
     "inline_static",
     "notifications",
     "drf_yasg",
+    "tinymce",
 ]
 
 # DBTEMPLATES_USE_REVERSION = True
@@ -796,7 +796,7 @@ DBBACKUP_STORAGE_OPTIONS = {
     "bucket_name": "dpnk-dbbackups",
 }
 
-FIOBANK_PAYMENTS_ORDER_MODEL = "dpnk.Invoice"
+#FIOBANK_PAYMENTS_ORDER_MODEL = "dpnk.Invoice"
 
 HELPDESK_IFRAME_URL = os.environ.get(
     "HELPDESK_IFRAME_URL", "https://klub.auto-mat.cz/desk/kb_iframe/dpnk/"
@@ -817,6 +817,7 @@ IMPORT_EXPORT_CELERY_MODELS = {
 }
 
 NOTIFICATIONS_NOTIFICATIONTEMPLATE_MODEL = "dpnk.DpnkNotificationTemplate"
+NOTIFICATIONS_SOFT_DELETE = True
 
 DEBUG_TOOLBAR = str_to_bool(os.environ.get("DPNK_DEBUG_TOOLBAR", False))
 if DEBUG_TOOLBAR:
@@ -1036,3 +1037,8 @@ DPNK_MOBILE_APP_SIMPLE_JWT_TOKEN_CONFIG = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timezone.timedelta(hours=8),
 }
+
+# TinyMCE configuration
+TINYMCE_SPELLCHECKER = True
+TINYMCE_COMPRESSOR = True
+TINYMCE_JS_URL = os.path.join(STATIC_URL, "tinymce/tinymce.min.js")

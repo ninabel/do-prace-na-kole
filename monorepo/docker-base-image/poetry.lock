@@ -975,21 +975,6 @@ files = [
 Django = ">=4.2"
 
 [[package]]
-name = "dj-fiobank-payments"
-version = "0.3.0"
-description = "Retrieve payments from Fio bank API (through fiobank package) and parse them into Payment objects."
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "dj-fiobank-payments-0.3.0.tar.gz", hash = "sha256:a46e9395b7325b1534f9473f43ed6eda5367289402821440751f9611c9821220"},
-]
-
-[package.dependencies]
-django-model-utils = ">=2.0"
-fiobank = "*"
-
-[[package]]
 name = "dj-rest-auth"
 version = "7.0.2"
 description = "Authentication and Registration in Django Rest Framework"
@@ -1049,6 +1034,18 @@ django-memoize = "*"
 django-multiselectfield = "*"
 django-nvd3 = ">=0.5.0"
 python-dateutil = "*"
+
+[[package]]
+name = "django-admin-list-filters"
+version = "1.3.1"
+description = "Embedded filters for Django Admin site"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "django-admin-list-filters-1.3.1.tar.gz", hash = "sha256:0939293b933a8cb02bf76694cc0ee5b68777d775a501c8a080541987bea241d4"},
+    {file = "django_admin_list_filters-1.3.1-py3-none-any.whl", hash = "sha256:03e093113f6cd1804837212af1a95cd8864c987b102d7cd8ef2864ff7840645b"},
+]
 
 [[package]]
 name = "django-admin-smoke-tests"
@@ -1118,18 +1115,19 @@ xlwt = "*"
 
 [[package]]
 name = "django-adminfilters"
-version = "1.0.0"
-description = "Extra filters for django admin site"
+version = "2.7"
+description = "Collection of Django Admin filters"
 optional = false
-python-versions = "*"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django-adminfilters-1.0.0.tar.gz", hash = "sha256:66a343d9a133369688fbf227f340d93bc56b8add8476615b1f16079dba4b4e0f"},
+    {file = "django_adminfilters-2.7-py3-none-any.whl", hash = "sha256:c8323b6a6904ec7cf48faf40b4f61578e22210380953e050731de48211e74601"},
+    {file = "django_adminfilters-2.7.tar.gz", hash = "sha256:0a825bc7cf7e067ecc5e90ff6968be4a14382c57e4d57f59a207928c8498f4f8"},
 ]
 
-[package.extras]
-dev = ["autopep8", "check-manifest", "check-manifest", "coverage", "django", "pdbpp", "pytest", "pytest-cov", "pytest-django", "pytest-echo", "pytest-pythonpath", "tox"]
-test = ["check-manifest", "coverage", "pytest", "pytest-cov", "pytest-django", "pytest-echo", "pytest-pythonpath", "tox"]
+[package.dependencies]
+django-stubs = ">=5.1.3"
+django-stubs-ext = ">=5.1.3"
 
 [[package]]
 name = "django-advanced-filters"
@@ -1505,20 +1503,6 @@ files = [
 
 [package.dependencies]
 django = ">=3.0"
-
-[[package]]
-name = "django-daterange-filter"
-version = "1.3.0"
-description = "Allow to filter by a custom date range on the Django Admin"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "django-daterange-filter-1.3.0.tar.gz", hash = "sha256:f31aee8f747f36b3a25fa332ad5c3e170e87ba97e957aacfa196c1cd68ac336e"},
-]
-
-[package.dependencies]
-Django = "*"
 
 [[package]]
 name = "django-dbbackup"
@@ -2066,7 +2050,7 @@ nose = ">=1.2.1"
 
 [[package]]
 name = "django-notifications-hq"
-version = "1.4.0"
+version = "1.9.0"
 description = "GitHub notifications alike app for Django."
 optional = false
 python-versions = "*"
@@ -2075,17 +2059,17 @@ files = []
 develop = false
 
 [package.dependencies]
-django = ">=1.7"
-django-model-utils = ">=2.0.3"
-jsonfield = ">=1.0.3"
-pytz = "*"
+django = ">=4.2,<5.3"
+django-model-utils = ">=3.1.0"
+jsonfield = ">=2.1.0"
+packaging = "*"
 swapper = "*"
 
 [package.source]
 type = "git"
-url = "https://github.com/auto-mat/django-notifications.git"
-reference = "list_all"
-resolved_reference = "c8112963271769e4c3c35d6ba4db45d597a962d2"
+url = "https://github.com/django-notifications/django-notifications.git"
+reference = "HEAD"
+resolved_reference = "4c44bcea2504d9a3fcd26366b232a13732a08f2a"
 
 [[package]]
 name = "django-nvd3"
@@ -2230,24 +2214,6 @@ files = [
 ]
 
 [package.dependencies]
-six = "*"
-
-[[package]]
-name = "django-report-builder"
-version = "6.4.2"
-description = "Query and Report builder for Django ORM"
-optional = false
-python-versions = ">=3.3"
-groups = ["main"]
-files = [
-    {file = "django-report-builder-6.4.2.tar.gz", hash = "sha256:a483731993a20e7a20703c8dc7f1c1be32dee5cd0ba8a8b0664ae18af0d960b3"},
-    {file = "django_report_builder-6.4.2-py2.py3-none-any.whl", hash = "sha256:aa2bab36fe7937c374939ee35216c28934b70d70dbe6052d775338585e12ec84"},
-]
-
-[package.dependencies]
-djangorestframework = ">=3.8.0"
-openpyxl = ">=2.2.1"
-python-dateutil = "*"
 six = "*"
 
 [[package]]
@@ -2411,7 +2377,7 @@ django = ">=3.2"
 
 [[package]]
 name = "django-smmapdfs"
-version = "1.2.0"
+version = "1.2.1"
 description = "Generate PDFs from django models by overlaying text onto an existing pdf"
 optional = false
 python-versions = "*"
@@ -2424,9 +2390,9 @@ django-colorfield = "*"
 
 [package.source]
 type = "git"
-url = "https://git@github.com/auto-mat/smmapdfs.git"
+url = "https://git@github.com/ninabel/smmapdfs.git"
 reference = "master"
-resolved_reference = "a14d52b0ea5ca5ffb9cbc426c2f2322a797685fe"
+resolved_reference = "23c13405b0daf231a5bdb5ca227935f46c7d2edb"
 
 [[package]]
 name = "django-softhyphen"
@@ -2456,7 +2422,7 @@ files = [
 
 [[package]]
 name = "django-stdnumfield"
-version = "0.1.5"
+version = "0.1.6"
 description = "Simple Django form and model fields for working with stdnum fields."
 optional = false
 python-versions = "*"
@@ -2469,9 +2435,9 @@ python-stdnum = ">=1.5,<1.6"
 
 [package.source]
 type = "git"
-url = "https://github.com/PetrDlouhy/django-stdnumfield.git"
-reference = "mergeup"
-resolved_reference = "65fe751779ab222c396bbd31fd9f64d42aac8c3e"
+url = "https://github.com/ninabel/django-stdnumfield.git"
+reference = "HEAD"
+resolved_reference = "62570147873bc66286bc504774070fad9a9d2cd1"
 
 [[package]]
 name = "django-storages"
@@ -2496,6 +2462,29 @@ google = ["google-cloud-storage (>=1.36.1)"]
 libcloud = ["apache-libcloud"]
 s3 = ["boto3 (>=1.4.4)"]
 sftp = ["paramiko (>=1.15)"]
+
+[[package]]
+name = "django-stubs"
+version = "5.2.9"
+description = "Mypy stubs for Django"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_stubs-5.2.9-py3-none-any.whl", hash = "sha256:2317a7130afdaa76f6ff7f623650d7f3bf1b6c86a60f95840e14e6ec6de1a7cd"},
+    {file = "django_stubs-5.2.9.tar.gz", hash = "sha256:c192257120b08785cfe6f2f1c91f1797aceae8e9daa689c336e52c91e8f6a493"},
+]
+
+[package.dependencies]
+django = "*"
+django-stubs-ext = ">=5.2.9"
+types-pyyaml = "*"
+typing-extensions = ">=4.11.0"
+
+[package.extras]
+compatible-mypy = ["mypy (>=1.13,<1.20)"]
+oracle = ["oracledb"]
+redis = ["redis", "types-redis"]
 
 [[package]]
 name = "django-stubs-ext"
@@ -2578,6 +2567,21 @@ files = [
 Django = ">=3.2,<6.1"
 
 [[package]]
+name = "django-tinymce"
+version = "5.0.0"
+description = "A Django application that contains a widget to render a"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "django_tinymce-5.0.0-py3-none-any.whl", hash = "sha256:c2e9c5efd2cc6c036f4c57e602b133180433e2bd1513b897089d3c4fb4e20579"},
+    {file = "django_tinymce-5.0.0.tar.gz", hash = "sha256:6257669ed596accf5fa967ff3061276b2c5352baac1bbc658fcd8252b12ca38a"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+
+[[package]]
 name = "django-webtest"
 version = "1.9.14"
 description = "Instant integration of Ian Bicking's WebTest (http://docs.pylonsproject.org/projects/webtest/) with Django's testing framework."
@@ -2591,25 +2595,6 @@ files = [
 
 [package.dependencies]
 webtest = ">=1.3.3"
-
-[[package]]
-name = "django-wysiwyg-redactor"
-version = "0.5.1"
-description = "django-wysiwyg-redactor is a lightweight responsive wysiwyg editor for Django"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = []
-develop = false
-
-[package.dependencies]
-setuptools = "*"
-
-[package.source]
-type = "git"
-url = "https://github.com/adilkhash/django-wysiwyg-redactor"
-reference = "HEAD"
-resolved_reference = "b2c4ca33909ced447f3c1ee9bd01dab14d3a5ac2"
 
 [[package]]
 name = "djangorestframework"
@@ -2771,18 +2756,6 @@ files = [
 ]
 
 [[package]]
-name = "et-xmlfile"
-version = "2.0.0"
-description = "An implementation of lxml.xmlfile for the standard library"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"},
-    {file = "et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54"},
-]
-
-[[package]]
 name = "exifread"
 version = "3.5.1"
 description = "Library to extract Exif information from digital camera image files."
@@ -2843,22 +2816,6 @@ files = [
     {file = "filelock-3.20.3-py3-none-any.whl", hash = "sha256:4b0dda527ee31078689fc205ec4f1c1bf7d56cf88b6dc9426c4f230e46c2dce1"},
     {file = "filelock-3.20.3.tar.gz", hash = "sha256:18c57ee915c7ec61cff0ecf7f0f869936c7c30191bb0cf406f1341778d0834e1"},
 ]
-
-[[package]]
-name = "fiobank"
-version = "4.0.0"
-description = "Fio Bank API in Python (unofficial)"
-optional = false
-python-versions = "<4.0,>=3.9"
-groups = ["main"]
-files = [
-    {file = "fiobank-4.0.0-py3-none-any.whl", hash = "sha256:309febe264bd6608181f689fba303027a468d56473b91db92a4899e43f7b7546"},
-    {file = "fiobank-4.0.0.tar.gz", hash = "sha256:0f2c76f331b4c506dc54ba083db1e9e79d7a0f847698605478de385bfd509223"},
-]
-
-[package.dependencies]
-requests = ">=2.28.2,<3.0.0"
-tenacity = ">=9.0.0"
 
 [[package]]
 name = "flake8"
@@ -4063,21 +4020,6 @@ files = [
 rsa = ["cryptography (>=3.0.0)"]
 signals = ["blinker (>=1.4.0)"]
 signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
-
-[[package]]
-name = "openpyxl"
-version = "3.1.5"
-description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"},
-    {file = "openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050"},
-]
-
-[package.dependencies]
-et-xmlfile = "*"
 
 [[package]]
 name = "ordereddict"
@@ -5460,7 +5402,7 @@ version = "80.10.1"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["dev"]
 files = [
     {file = "setuptools-80.10.1-py3-none-any.whl", hash = "sha256:fc30c51cbcb8199a219c12cc9c281b5925a4978d212f84229c909636d9f6984e"},
     {file = "setuptools-80.10.1.tar.gz", hash = "sha256:bf2e513eb8144c3298a3bd28ab1a5edb739131ec5c22e045ff93cd7f5319703a"},
@@ -5977,22 +5919,6 @@ xlsx = ["openpyxl (>=2.6.0)"]
 yaml = ["pyyaml"]
 
 [[package]]
-name = "tenacity"
-version = "9.1.2"
-description = "Retry code until it succeeds"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "tenacity-9.1.2-py3-none-any.whl", hash = "sha256:f77bf36710d8b73a50b2dd155c97b870017ad21afe6ab300326b0371b3b05138"},
-    {file = "tenacity-9.1.2.tar.gz", hash = "sha256:1169d376c297e7de388d18b4481760d478b0e99a777cad3a9c86e556f4b697cb"},
-]
-
-[package.extras]
-doc = ["reno", "sphinx"]
-test = ["pytest", "tornado (>=4.5)", "typeguard"]
-
-[[package]]
 name = "text-unidecode"
 version = "1.3"
 description = "The most basic Text::Unidecode port"
@@ -6055,6 +5981,18 @@ files = [
     {file = "tornado-6.5.4-cp39-abi3-win_amd64.whl", hash = "sha256:fa07d31e0cd85c60713f2b995da613588aa03e1303d75705dca6af8babc18ddc"},
     {file = "tornado-6.5.4-cp39-abi3-win_arm64.whl", hash = "sha256:053e6e16701eb6cbe641f308f4c1a9541f91b6261991160391bfc342e8a551a1"},
     {file = "tornado-6.5.4.tar.gz", hash = "sha256:a22fa9047405d03260b483980635f0b041989d8bcc9a313f8fe18b411d84b1d7"},
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20250915"
+description = "Typing stubs for PyYAML"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "types_pyyaml-6.0.12.20250915-py3-none-any.whl", hash = "sha256:e7d4d9e064e89a3b3cae120b4990cd370874d2bf12fa5f46c97018dd5d3c9ab6"},
+    {file = "types_pyyaml-6.0.12.20250915.tar.gz", hash = "sha256:0f8b54a528c303f0e6f7165687dd33fafa81c807fcac23f632b63aa624ced1d3"},
 ]
 
 [[package]]
@@ -6525,4 +6463,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.14"
-content-hash = "6ae7409f6496e6fb5b06bc1635fcb388807c55bf0ecd528c47115a719f912911"
+content-hash = "dc850ac47c94206f871f71abce64771d1592e75f24f325cdb44d84f576cab92d"

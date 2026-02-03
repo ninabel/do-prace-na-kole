@@ -55,8 +55,7 @@ django-extra-views = "*"
 raven = "*"
 celery = "^5.6.0"
 flower = "*"
-django-daterange-filter = "*"
-django-smmapdfs = {git = "https://git@github.com/auto-mat/smmapdfs.git", rev = "master"}
+django-smmapdfs = {git = "https://git@github.com/ninabel/smmapdfs.git", rev = "master"}
 django-storages = "*"
 django-model-utils = "*"
 django-datatables-view = "*"
@@ -72,7 +71,6 @@ ua-parser = "*"
 whitenoise = "*"
 django-favicon = "*"
 django-mass-edit = "*"
-fiobank = "*"
 django-ipware = "<=2.1.0"
 djangorestframework-gis = "*"
 django-table-select-widget = {git = "https://github.com/willardmr/DjangoTableSelectMultipleWidget.git", rev = "master"}
@@ -88,7 +86,6 @@ vokativ = "*"
 django-fm = {git = "https://github.com/auto-mat/django-fm.git", rev = "fix-jquery-ajax-deprecated-methods"}
 django-initial-field = "*"
 django-betterforms = "*"
-django-adminfilters = "==1.0.0"
 django-bleach = "*"
 sqlparse = "*"
 django-appconf = "*"
@@ -97,7 +94,6 @@ svg2rlg = {git = "https://github.com/aquavitae/svg2rlg.git"}
 django-subdomains = {git = "https://github.com/PetrDlouhy/django-subdomains", rev = "django20"}
 django-advanced-filters = "*"
 stravalib = {git = "https://github.com/hozn/stravalib", rev = "main"}
-django-wysiwyg-redactor = {git = "https://github.com/adilkhash/django-wysiwyg-redactor"}
 django-selectable = "*"
 django-likes = {git = "https://github.com/PetrDlouhy/django-likes.git", rev = "develop"}
 django-braces = "*"
@@ -107,7 +103,7 @@ Unidecode = "*"
 easy-thumbnails = "*"
 SQLAlchemy = "*"
 django_celery_beat = "*"
-django-stdnumfield = {git = "https://github.com/PetrDlouhy/django-stdnumfield.git", rev = "mergeup"}
+django-stdnumfield = {git = "https://github.com/ninabel/django-stdnumfield.git"}
 PyPDF2 = "*"
 django-bootstrap4 = "==0.0.8"
 html2text = "*"
@@ -115,20 +111,17 @@ tornado = "<7"
 dj_anonymizer = "*"
 faker = "*"
 django-colorfield = "*"
-dj-fiobank-payments = "<=0.3.0"
 asgiref = "*"
 django-dbtemplates = "*"
 django-reversion = "*"
 django-admin-charts = "*" 
 django-inline-static = "*"
-django-notifications-hq = {git = "https://github.com/auto-mat/django-notifications.git", rev = "list_all"}
 django-extra-fields = "*"
 django-debug-toolbar = "*"
 django-debug-toolbar-template-timings = "*"
 django-debug-toolbar-request-history = "*"
 django-silk = "*"
 pre-commit = "*"
-django-report-builder = "*"
 dj-rest-auth = {version = "*", extras = ["with_social"]}
 memoize = "^1.0.0"
 fakturoid = "^1.5.1"
@@ -140,6 +133,10 @@ drf-serpy = "^0.5.0"
 djangorestframework-simplejwt = "4.8.0"
 django-prices = "^2.4.0"
 django-cache-machine = "^1.2.0"
+django-tinymce = "^5.0.0"
+django-notifications-hq = {git = "https://github.com/django-notifications/django-notifications.git"}
+django-adminfilters = "^2.7"
+django-admin-list-filters = "^1.3.1"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "*"

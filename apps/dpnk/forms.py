@@ -60,7 +60,7 @@ from t_shirt_delivery.models import TShirtSize
 
 from . import email, models, util, views
 from .fields import CommaFloatField, ShowPointsMultipleModelChoiceField
-from .string_lazy import format_html_lazy
+from .format_html_lazy import format_html_lazy
 from .widgets import CommuteModeSelect
 
 logger = logging.getLogger(__name__)

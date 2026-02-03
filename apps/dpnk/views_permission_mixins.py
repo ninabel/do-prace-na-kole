@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from .format_html_lazy import format_html_lazy
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -29,7 +30,7 @@ from django.utils.translation import gettext_lazy as _
 from dpnk import exceptions
 from dpnk.models import PHASE_TYPE_DICT
 
-from .string_lazy import format_html_lazy, mark_safe_lazy
+from .string_lazy import mark_safe_lazy
 
 
 class PhaseMixin(object):

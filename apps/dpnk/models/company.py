@@ -26,7 +26,7 @@ from django.core.validators import RegexValidator
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from memoize import mproperty
+from memoize import memoize
 
 from stdnumfield.models import StdNumField
 
@@ -237,28 +237,28 @@ class CompanyInCampaign:
         self.company = company
         self.campaign = campaign
 
-    @mproperty
+    @memoize
     def name(self):
         return self.company.name
 
-    @mproperty
+    @memoize
     def subsidiaries(self):
         subsidiaries = []
         for subsidiary in self.company.subsidiaries.all():
             subsidiaries.append(SubsidiaryInCampaign(subsidiary, self.campaign))
         return subsidiaries
 
-    @mproperty
+    @memoize
     def eco_trip_count(self):
         return sum(subsidiary.eco_trip_count for subsidiary in self.subsidiaries)
 
-    @mproperty
+    @memoize
     def working_rides_base_count(self):
         return sum(
             subsidiary.working_rides_base_count for subsidiary in self.subsidiaries
         )
 
-    @mproperty
+    @memoize
     def frequency(self):
         subsidiaries = self.subsidiaries
         if subsidiaries:
@@ -268,11 +268,11 @@ class CompanyInCampaign:
         else:
             return 0
 
-    @mproperty
+    @memoize
     def distance(self):
         return sum(subsidiary.distance for subsidiary in self.subsidiaries)
 
-    @mproperty
+    @memoize
     def emissions(self):
         return util.get_emissions(self.distance)
 

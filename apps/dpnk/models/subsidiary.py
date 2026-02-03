@@ -22,7 +22,7 @@ from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from memoize import mproperty
+from memoize import memoize
 from smart_selects.db_fields import ChainedForeignKey
 
 from .address import Address, get_address_string
@@ -159,19 +159,19 @@ class SubsidiaryInCampaign:
         self.subsidiary = subsidiary
         self.campaign = campaign
 
-    @mproperty
+    @memoize
     def teams(self):
         return self.subsidiary.teams.filter(campaign=self.campaign)
 
-    @mproperty
+    @memoize
     def eco_trip_count(self):
         return sum(team.get_eco_trip_count() for team in self.teams)
 
-    @mproperty
+    @memoize
     def working_rides_base_count(self):
         return sum(team.get_working_trips_count() for team in self.teams)
 
-    @mproperty
+    @memoize
     def frequency_(self):
         teams = self.teams
         if teams:
@@ -187,19 +187,19 @@ class SubsidiaryInCampaign:
         else:
             return 0, 0
 
-    @mproperty
+    @memoize
     def frequency(self):
         return self.frequency_[0]
 
-    @mproperty
+    @memoize
     def distance(self):
         return sum(team.get_length() for team in self.teams)
 
-    @mproperty
+    @memoize
     def emissions(self):
         return util.get_emissions(self.distance)
 
-    @mproperty
+    @memoize
     def __str__prop__(self):
         return str(self.subsidiary)
 

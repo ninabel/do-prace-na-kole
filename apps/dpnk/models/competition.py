@@ -28,11 +28,10 @@ from django.dispatch import receiver
 from django.utils.html import escape
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import gettext_lazy
 
 from rank import Rank, UpperRank
-
-from redactor.widgets import RedactorEditor
+from tinymce.widgets import TinyMCE
 
 from .campaign import Campaign
 from .city import City
@@ -505,7 +504,7 @@ class Competition(models.Model):
 
         cities = self.city.all()
         if cities:
-            city_string = ungettext_lazy(
+            city_string = gettext_lazy(
                 "ve městě %(cities)s",
                 "ve městech %(cities)s",
                 len(cities),
@@ -563,8 +562,8 @@ class CompetitionForm(forms.ModelForm):
         model = Competition
         exclude = ()
         widgets = {
-            "rules": RedactorEditor(),
-            "results_text": RedactorEditor(),
+            "rules": TinyMCE(),
+            "results_text": TinyMCE(),
         }
 
     def save(self, *args, **kwargs):

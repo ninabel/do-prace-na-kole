@@ -42,7 +42,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import CompanyAdmin
 from .forms import CampaignMixin, SubmitMixin, social_html
-from .string_lazy import format_html_lazy
+from .format_html_lazy import format_html_lazy
 from .util import attrgetter_def_val
 
 

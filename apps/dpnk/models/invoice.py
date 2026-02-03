@@ -25,7 +25,7 @@ from author.decorators import with_author
 
 import denorm
 
-from dj_fiobank_payments.models import AbstractOrder
+# from dj_fiobank_payments.models import AbstractOrder
 
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
@@ -51,7 +51,7 @@ def get_invoice_dir(instance, filename):
 
 
 @with_author
-class Invoice(StaleSyncMixin, AbstractOrder):
+class Invoice(StaleSyncMixin, models.Model):
     """Faktura"""
 
     class Meta:

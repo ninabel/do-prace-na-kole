@@ -30,7 +30,7 @@ from adminfilters.filters import RelatedFieldCheckBoxFilter, RelatedFieldComboFi
 
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
-from daterange_filter.filter import DateRangeFilter
+from django_admin_filters import DateRange as DateRangeFilter
 
 from django import forms
 from django.conf import settings

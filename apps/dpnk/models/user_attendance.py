@@ -41,7 +41,7 @@ from django.utils.translation import gettext_lazy as _
 
 from motivation_messages.models import MotivationMessage
 
-from notifications.signals import notify, revoke_notification
+from notifications.signals import notify
 
 from stale_notifications.model_mixins import StaleSyncMixin
 
@@ -793,7 +793,7 @@ class UserAttendance(StaleSyncMixin, models.Model):
         return self.trip_points_total or 0
 
     def points_display(self):
-        from django.utils.translation import ugettext as _
+        from django.utils.translation import gettext as _
 
         return str(round(self.points)) + " " + _("bodů")
 
@@ -927,13 +927,6 @@ class UserAttendance(StaleSyncMixin, models.Model):
             action_object=template,
         )
         activate(clang)
-
-    def revoke_templated_notification(self, template):
-        revoke_notification.send(
-            self,
-            recipient=self.userprofile.user,
-            action_object=template,
-        )
 
     def notifications(self):
         user_content_type = ContentType.objects.get(app_label="auth", model="user")

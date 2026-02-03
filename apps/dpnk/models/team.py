@@ -34,7 +34,7 @@ from django.contrib.gis.db import models
 from django.core.validators import MinLengthValidator
 from django.utils.translation import gettext_lazy as _
 
-from memoize import mproperty
+from memoize import memoize
 
 from .phase import Phase
 from .subsidiary import Subsidiary, SubsidiaryInCampaign
