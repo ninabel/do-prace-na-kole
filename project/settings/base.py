@@ -138,6 +138,8 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = ("cs", "dsnkcs", "en")
 MODELTRANSLATION_ENABLE_FALLBACKS = True
 SITE_ID = os.environ.get("DPNK_SITE_ID", 1)
 USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
 IMPORT_EXPORT_TMP_STORAGE_CLASS = "import_export.tmp_storages.MediaStorage"
 
