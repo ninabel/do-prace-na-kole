@@ -42,7 +42,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 
-from t_shirt_delivery.models import TShirtSize
+# from t_shirt_delivery.models import TShirtSize
 
 # Local imports
 from .team import approve_for_team
@@ -360,30 +360,30 @@ class PaymentTypeView(
                     title=_("Děkujeme!"),
                     error_level="success",
                 )
-            if (
-                request.user_attendance.campaign.has_any_tshirt
-                and not request.user_attendance.t_shirt_size
-            ):
-                raise exceptions.TemplatePermissionDenied(
-                    format_html(
-                        _(
-                            "Zatím není co platit. Nejdříve se {join_team} a {choose_shirt}."
-                        ),
-                        join_team=format_html(
-                            "<a href='{}'>{}</a>",
-                            reverse("zmenit_tym"),
-                            _("přidejte k týmu"),
-                        ),
-                        choose_shirt=format_html(
-                            "<a href='{}'>{}</a>",
-                            reverse("zmenit_triko"),
-                            _("vyberte tričko"),
-                        ),
-                    ),
-                    self.template_name,
-                    title=_("Dobrá hospodyňka pro kolo i přes plot skočí"),
-                    error_level="warning",
-                )
+            # if (
+            #     request.user_attendance.campaign.has_any_tshirt
+            #     and not request.user_attendance.t_shirt_size
+            # ):
+            #     raise exceptions.TemplatePermissionDenied(
+            #         format_html(
+            #             _(
+            #                 "Zatím není co platit. Nejdříve se {join_team} a {choose_shirt}."
+            #             ),
+            #             join_team=format_html(
+            #                 "<a href='{}'>{}</a>",
+            #                 reverse("zmenit_tym"),
+            #                 _("přidejte k týmu"),
+            #             ),
+            #             choose_shirt=format_html(
+            #                 "<a href='{}'>{}</a>",
+            #                 reverse("zmenit_triko"),
+            #                 _("vyberte tričko"),
+            #             ),
+            #         ),
+                #     self.template_name,
+                #     title=_("Dobrá hospodyňka pro kolo i přes plot skočí"),
+                #     error_level="warning",
+                # )
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -398,50 +398,50 @@ class PaymentTypeView(
         context["prev_url"] = self.prev_url
         context["disable_payment_btn"] = ""
 
-        campaign_tshirts = (
-            TShirtSize.objects.filter(
-                campaign=self.campaign,
-                available=True,
-            )
-            .exclude(t_shirt_preview=None)
-            .values_list("name", flat=True)
-        )
-        package_transaction_content_type = ContentType.objects.get(
-            model="packagetransaction",
-            app_label="t_shirt_delivery",
-        )
-        payment_content_type = ContentType.objects.get(
-            model="payment",
-            app_label="dpnk",
-        )
-        transactions = self.user_attendance.transactions.all()
-        if transactions:
-            payment_not_done_transaction = transactions.exclude(
-                polymorphic_ctype_id__in=[
-                    package_transaction_content_type.id,
-                ],
-            ).exclude(
-                polymorphic_ctype_id__in=[
-                    payment_content_type.id,
-                ],
-                payment__status=models.Status.DONE,
-            )
-        else:
-            payment_not_done_transaction = True
-        if (
-            self.user_attendance.t_shirt_size
-            and self.user_attendance.t_shirt_size.name not in campaign_tshirts
-            and payment_not_done_transaction
-        ):
-            context["disable_payment_btn"] = "disabled"
-            context["payment_disabled_txt"] = _(
-                "Platba není možná. Vámi vybraná velikost trika {} již"
-                " není dostupná. Vyberte jinú velikost trika."
-            ).format(
-                "<strong>{}</strong>".format(
-                    self.user_attendance.t_shirt_size.name,
-                )
-            )
+        # campaign_tshirts = (
+        #     TShirtSize.objects.filter(
+        #         campaign=self.campaign,
+        #         available=True,
+        #     )
+        #     .exclude(t_shirt_preview=None)
+        #     .values_list("name", flat=True)
+        # )
+        # package_transaction_content_type = ContentType.objects.get(
+        #     model="packagetransaction",
+        #     app_label="t_shirt_delivery",
+        # )
+        # payment_content_type = ContentType.objects.get(
+        #     model="payment",
+        #     app_label="dpnk",
+        # )
+        # transactions = self.user_attendance.transactions.all()
+        # if transactions:
+        #     payment_not_done_transaction = transactions.exclude(
+        #         polymorphic_ctype_id__in=[
+        #             package_transaction_content_type.id,
+        #         ],
+        #     ).exclude(
+        #         polymorphic_ctype_id__in=[
+        #             payment_content_type.id,
+        #         ],
+        #         payment__status=models.Status.DONE,
+        #     )
+        # else:
+        #     payment_not_done_transaction = True
+        # if (
+        #     self.user_attendance.t_shirt_size
+        #     and self.user_attendance.t_shirt_size.name not in campaign_tshirts
+        #     and payment_not_done_transaction
+        # ):
+        #     context["disable_payment_btn"] = "disabled"
+        #     context["payment_disabled_txt"] = _(
+        #         "Platba není možná. Vámi vybraná velikost trika {} již"
+        #         " není dostupná. Vyberte jinú velikost trika."
+        #     ).format(
+        #         "<strong>{}</strong>".format(
+        #             self.user_attendance.t_shirt_size.name,
+        #         )
+        #     )
 
         return context
 

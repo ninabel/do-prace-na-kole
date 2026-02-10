@@ -78,7 +78,7 @@ from notifications.admin import AbstractNotificationAdmin
 
 from polymorphic.admin import PolymorphicChildModelAdmin
 
-# from price_level import models as price_level_models
+from django_prices.models import MoneyField
 
 from related_admin import RelatedFieldAdmin
 
@@ -89,9 +89,9 @@ from smmapdfs.admin_abcs import PdfSandwichAdmin, PdfSandwichFieldAdmin
 
 from stale_notifications.admin_mixins import StaleSyncMixin
 
-from t_shirt_delivery.admin import PackageTransactionInline
-from t_shirt_delivery.forms import PackageTransactionForm
-from t_shirt_delivery.models import TShirtSize
+# from t_shirt_delivery.admin import PackageTransactionInline
+# from t_shirt_delivery.forms import PackageTransactionForm
+# from t_shirt_delivery.models import TShirtSize
 
 from . import actions, models, resources, transaction_forms
 from .admin_mixins import CityAdminMixin, FormRequestMixin, city_admin_mixin_generator
@@ -585,11 +585,11 @@ class UserAttendanceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if "t_shirt_size" in self.fields:
-            if hasattr(self.instance, "campaign"):
-                self.fields["t_shirt_size"].queryset = TShirtSize.objects.filter(
-                    campaign=self.instance.campaign
-                )
+        # if "t_shirt_size" in self.fields:
+        #    if hasattr(self.instance, "campaign"):
+        #        self.fields["t_shirt_size"].queryset = TShirtSize.objects.filter(
+        #            campaign=self.instance.campaign
+        #        )
 
     def clean(self):
         if "team" in self.cleaned_data:  # if not in merge form
@@ -861,7 +861,7 @@ class UserAttendanceAdmin(
         "team__subsidiary__company",
         "approved_for_team",
         "campaign__name",
-        "t_shirt_size__name",
+        # "t_shirt_size__name",
         "payment_status",
         "representative_payment__pay_type",
         "representative_payment__status",
@@ -881,7 +881,7 @@ class UserAttendanceAdmin(
         CampaignFilter,
         ("team__subsidiary__city", RelatedFieldCheckBoxFilter),
         ("approved_for_team", AllValuesComboFilter),
-        "t_shirt_size__name",
+        # "t_shirt_size__name",
         "userprofile__user__is_active",
         "userprofile__mailing_opt_in",
         "userprofile__telephone_opt_in",
@@ -905,7 +905,7 @@ class UserAttendanceAdmin(
         "campaign",
         "team__subsidiary__city",
         "approved_for_team",
-        "t_shirt_size",
+        # "t_shirt_size",
         "userprofile__user__is_active",
         "userprofile__mailing_opt_in",
         "userprofile__telephone_opt_in",
@@ -915,7 +915,7 @@ class UserAttendanceAdmin(
         ("representative_payment_realized", _("Datum realizace platby")),
         "payment_status",
         "team__member_count",
-        ("t_shirt_size__ship", _("Posílá se triko?")),
+        # ("t_shirt_size__ship", _("Posílá se triko?")),
         "transactions__packagetransaction__team_package__box__delivery_batch",
         "team",
         "userprofile__sex",
@@ -964,7 +964,7 @@ class UserAttendanceAdmin(
     form = UserAttendanceForm
     inlines = [
         PaymentInlineUserAttendance,
-        PackageTransactionInline,
+        # PackageTransactionInline,
         UserActionTransactionInline,
         TripAdminInline,
     ]
@@ -1002,7 +1002,7 @@ class UserAttendanceAdmin(
         return queryset.select_related(
             "team__subsidiary__city",
             "team__subsidiary__company",
-            "t_shirt_size__campaign",
+            # "t_shirt_size__campaign",
         ).defer(
             "track",
             "userprofile__user__password",
@@ -1087,9 +1087,9 @@ class PaymentChildAdmin(TransactionChildAdmin):
     form = transaction_forms.PaymentForm
 
 
-class PackageTransactionChildAdmin(TransactionChildAdmin):
-    readonly_fields = ["created", "author", "updated_by", "t_shirt_size"]
-    form = PackageTransactionForm
+# class PackageTransactionChildAdmin(TransactionChildAdmin):
+#    readonly_fields = ["created", "author", "updated_by", "t_shirt_size"]
+#    form = PackageTransactionForm
 
 
 class UserActionTransactionChildAdmin(TransactionChildAdmin):
@@ -1398,14 +1398,20 @@ class PhaseInline(admin.TabularInline):
     extra = 0
 
 
+class PriceLevelInline(admin.TabularInline):
+    readonly_fields = ("created", "author", "updated_by")
+    model = MoneyField
+    extra = 0
+
+
 class CityInCampaignInline(admin.TabularInline):
     model = models.CityInCampaign
     extra = 0
 
 
-class TShirtSizeInline(SortableInlineAdminMixin, TranslationTabularInline):
-    model = TShirtSize
-    extra = 0
+# class TShirtSizeInline(SortableInlineAdminMixin, TranslationTabularInline):
+#     model = TShirtSize
+#     extra = 0
 
 
 @admin.register(models.CampaignType)
@@ -1524,10 +1530,10 @@ class CampaignAdmin(ImportExportMixin, TranslationAdmin, admin.ModelAdmin):
         ),
     )
     inlines = [
-        TShirtSizeInline,
+        #TShirtSizeInline,
         PhaseInline,
         CityInCampaignInline,
-        # PriceLevelInline,
+        PriceLevelInline,
     ]
     readonly_fields = (
         "name",

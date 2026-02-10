@@ -22,8 +22,6 @@ import gzip
 import logging
 from collections import OrderedDict
 
-from betterforms.multiform import MultiModelForm
-
 from crispy_forms.bootstrap import FieldWithButtons, StrictButton
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Button, Div, Field, Fieldset, HTML, Layout, Submit
@@ -33,7 +31,7 @@ from dal import autocomplete
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms.widgets import HiddenInput
@@ -56,11 +54,11 @@ import photologue
 
 import registration.forms
 
-from t_shirt_delivery.models import TShirtSize
+# from t_shirt_delivery.models import TShirtSize
 
 from . import email, models, util, views
 from .fields import CommaFloatField, ShowPointsMultipleModelChoiceField
-from .format_html_lazy import format_html_lazy
+from .string_lazy import format_html_lazy
 from .widgets import CommuteModeSelect
 
 logger = logging.getLogger(__name__)
@@ -160,6 +158,82 @@ class CampaignMixin(object):
     def __init__(self, *args, **kwargs):
         self.campaign = kwargs.pop("campaign", None)
         return super().__init__(*args, **kwargs)
+
+
+class MultiModelForm(forms.Form):
+    """A lightweight replacement for betterforms.MultiModelForm.
+
+    Subclasses must define `form_classes` as an OrderedDict mapping
+    form_name -> FormClass. When instantiating, callers may pass:
+      - `instances`: dict mapping form_name -> model instance
+      - `initials`: dict mapping form_name -> initial dict
+    `data` and `files` are forwarded to each subform so they can
+    validate POSTed data.
+
+    This implementation exposes `.forms` (OrderedDict of instantiated
+    forms), `.is_valid()`, `.errors`, `.cleaned_data` (dict by form
+    name) and `.save()` which calls `save()` on each subform that has
+    the method (typically ModelForms) and returns a dict of results.
+    """
+
+    form_classes = OrderedDict()
+
+    def __init__(self, *args, **kwargs):
+        data = kwargs.get("data", None)
+        files = kwargs.get("files", None)
+        instances = kwargs.pop("instances", {}) or {}
+        initials = kwargs.pop("initials", {}) or {}
+        prefix = kwargs.pop("prefix", None)
+
+        super().__init__(*args, **kwargs)
+
+        self.forms = OrderedDict()
+        for name, form_cls in self.form_classes.items():
+            form_kwargs = {}
+            # model instance for ModelForm
+            if name in instances:
+                form_kwargs["instance"] = instances[name]
+            # initial data scoped per subform
+            if name in initials:
+                form_kwargs["initial"] = initials[name]
+            if prefix:
+                form_kwargs["prefix"] = "%s-%s" % (prefix, name)
+            # pass through bound data/files if present
+            if data is not None:
+                form = form_cls(data, files, **form_kwargs)
+            else:
+                form = form_cls(**form_kwargs)
+            self.forms[name] = form
+
+    def is_valid(self):
+        valid = True
+        for form in self.forms.values():
+            if not form.is_valid():
+                valid = False
+        return valid
+
+    @property
+    def errors(self):
+        errs = OrderedDict()
+        for name, form in self.forms.items():
+            errs[name] = form.errors
+        return errs
+
+    @property
+    def cleaned_data(self):
+        data = OrderedDict()
+        for name, form in self.forms.items():
+            if hasattr(form, "cleaned_data"):
+                data[name] = form.cleaned_data
+        return data
+
+    def save(self, commit=True):
+        results = {}
+        for name, form in self.forms.items():
+            if hasattr(form, "save"):
+                results[name] = form.save(commit=commit)
+        return results
+
 
 
 def social_html(
@@ -788,19 +862,19 @@ class PaymentTypeForm(PrevNextMixin, forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user_attendance = kwargs.pop("user_attendance")
-        campaign_tshirts = (
-            TShirtSize.objects.filter(
-                campaign=self.user_attendance.campaign,
-                available=True,
-            )
-            .exclude(t_shirt_preview=None)
-            .values_list("name", flat=True)
-        )
-        if (
-            self.user_attendance.t_shirt_size
-            and self.user_attendance.t_shirt_size.name not in campaign_tshirts
-        ):
-            self.next_btn_disabled = True
+        # campaign_tshirts = (
+        #     TShirtSize.objects.filter(
+        #         campaign=self.user_attendance.campaign,
+        #         available=True,
+        #     )
+        #     .exclude(t_shirt_preview=None)
+        #     .values_list("name", flat=True)
+        # )
+        # if (
+        #     self.user_attendance.t_shirt_size
+        #     and self.user_attendance.t_shirt_size.name not in campaign_tshirts
+        # ):
+        #     self.next_btn_disabled = True
         ret_val = super().__init__(*args, **kwargs)
         self.helper.form_class = "noAsterisks"
         self.helper.form_id = "payment-type-form"

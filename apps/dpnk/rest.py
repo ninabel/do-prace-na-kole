@@ -47,7 +47,8 @@ from django.views.decorators.cache import cache_page
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.utils import has_verified_email, send_email_confirmation
+from allauth.account.utils import has_verified_email
+from allauth.account.models import EmailAddress
 from donation_chooser.rest import organization_router
 
 from drf_extra_fields.geo_fields import PointField
@@ -63,7 +64,7 @@ from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
 from rest_framework.views import APIView
-from price_level import models as price_level_models
+from django_prices.models import MoneyField
 
 from .middleware import get_or_create_userattendance
 from .models import (
@@ -92,7 +93,7 @@ from .models import (
 )
 from .models.company import CompanyInCampaign
 from .models.subsidiary import SubsidiaryInCampaign
-from t_shirt_delivery.models import TShirtSize
+# from t_shirt_delivery.models import TShirtSize
 from coupons.models import DiscountCoupon
 
 from .models.util import (
@@ -118,9 +119,9 @@ from .rest_permissions import IsOwnerOrSuperuser
 from .rest_auth import get_tokens_for_user, PayUNotifyOrderRequestAuthentification
 
 from photologue.models import Photo
-from stravasync.models import StravaAccount
+# from stravasync.models import StravaAccount
 
-from stravasync import hashtags
+# from stravasync import hashtags
 
 import drf_serpy as serpy
 
@@ -1633,7 +1634,7 @@ class CampaignSerializer(serpy.Serializer):
     price_level = RequestSpecificField(
         lambda campaign, req: [
             PriceLevelSerializer(price_level).data
-            for price_level in price_level_models.PriceLevel.objects.filter(
+            for price_level in MoneyField.objects.filter(
                 pricable=req.campaign
             ).only("name", "price", "category", "takes_effect_on")
         ]
@@ -2197,32 +2198,32 @@ class MerchandiseSerializer(serpy.Serializer):
     available = serpy.BoolField()
 
 
-class MerchandiseSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        code = self.kwargs.get("code")
-        queryset = {
-            "campaign__slug": self.request.subdomain,
-            "ship": True,
-        }
-        if code:
-            queryset.update({"code": code})
-            if code == "nic":
-                queryset.update({"code": code, "ship": False})
+# class MerchandiseSet(viewsets.ReadOnlyModelViewSet):
+#     def get_queryset(self):
+#         code = self.kwargs.get("code")
+#         queryset = {
+#             "campaign__slug": self.request.subdomain,
+#             "ship": True,
+#         }
+#         if code:
+#             queryset.update({"code": code})
+#             if code == "nic":
+#                 queryset.update({"code": code, "ship": False})
 
-        return TShirtSize.objects.filter(**queryset).only(
-            "id",
-            "name1",
-            "sex",
-            "size",
-            "author",
-            "material",
-            "description",
-            "t_shirt_preview",
-            "available",
-        )
+#         return TShirtSize.objects.filter(**queryset).only(
+#             "id",
+#             "name1",
+#             "sex",
+#             "size",
+#             "author",
+#             "material",
+#             "description",
+#             "t_shirt_preview",
+#             "available",
+#         )
 
-    serializer_class = MerchandiseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = MerchandiseSerializer
+#     permission_classes = [permissions.IsAuthenticated]
 
 
 class DiscountCouponSerializer(serpy.Serializer):
@@ -3582,8 +3583,15 @@ class SendRegistrationConfirmationEmail(APIView):
 
     def post(self, request):
         send_email = False
-        if not has_verified_email(request.user):
-            send_email_confirmation(request, request.user, request.user.email)
+        email_address, created = EmailAddress.objects.get_or_create(
+            user=request.user,
+            email=request.user.email,
+            defaults={'primary': True}
+        )
+        
+        # Pošli confirmation email
+        if not email_address.verified:
+            email_address.send_confirmation(request, signup=True)
             send_email = True
 
         return Response(
@@ -4026,10 +4034,10 @@ router.register(
 router.register(
     r"subsidiaries/(?P<subsidiary_id>\d+)/teams", TeamsSet, basename="subsidiary-teams"
 )
-router.register(
-    r"merchandise/(?P<code>[\w\-]+)", MerchandiseSet, basename="merchandise-code"
-)
-router.register(r"merchandise", MerchandiseSet, basename="merchandise")
+# router.register(
+#     r"merchandise/(?P<code>[\w\-]+)", MerchandiseSet, basename="merchandise-code"
+# )
+# router.register(r"merchandise", MerchandiseSet, basename="merchandise")
 router.register(
     "discount-coupon/(?P<code>[\w\-]+)",
     DiscountCouponSet,

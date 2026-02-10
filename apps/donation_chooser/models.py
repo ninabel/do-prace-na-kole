@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.html import escape, format_html
 from django.utils.translation import gettext_lazy as _
 from dpnk.models.trip import Trip, distance_all_modes
-from redactor.widgets import RedactorEditor
+from tinymce.widgets import TinyMCE
 
 
 def get_charitative_results_column(user_profile):
@@ -86,7 +86,7 @@ class CharitativeOrganizationForm(forms.ModelForm):
         model = CharitativeOrganization
         exclude = ()
         widgets = {
-            "description": RedactorEditor(),
+            "description": TinyMCE(),
         }
 
 

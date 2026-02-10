@@ -1,12 +1,13 @@
 from django.urls import reverse_lazy
+from notifications.base.models import AbstractNotification
 
-from notifications.notification_types import NotificationType
-
-
-class RegistrationPhaseNotification(NotificationType):
+class RegistrationPhaseNotification(AbstractNotification):
     def __init__(self, phase):
         self.phase = phase
         super().__init__()
+
+    class Meta:
+        app_label = "dpnk"
 
     def in_registration_phase(self, recipient):
         return recipient.campaign.phase("registration").is_actual()
@@ -14,6 +15,9 @@ class RegistrationPhaseNotification(NotificationType):
 
 class AloneInTeam(RegistrationPhaseNotification):
     slug = "alone-in-team"
+
+    class Meta:
+        app_label = "dpnk"
 
     def populate(self, template):
         template.verb = "Jsi sám v týmu. Pozvěte další členové."
@@ -34,6 +38,9 @@ class AloneInTeam(RegistrationPhaseNotification):
 class UnapprovedMembersInTeam(RegistrationPhaseNotification):
     slug = "unapproved-team-members"
 
+    class Meta:
+        app_label = "dpnk"
+
     def populate(self, template):
         template.verb = (
             "Ve Vašem týmu jsou neschválení členové, prosíme, posuďte jejich členství."
@@ -53,7 +60,10 @@ class UnapprovedMembersInTeam(RegistrationPhaseNotification):
         return False
 
 
-class Questionnaire(NotificationType):
+class Questionnaire(AbstractNotification):
+    class Meta:
+        app_label = "dpnk"
+
     def __init__(self, q):
         self.slug = "questionnaire-" + q.slug
         self.questionnaire = q

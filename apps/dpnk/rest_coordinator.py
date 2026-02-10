@@ -32,11 +32,11 @@ from .models import (
     Team,
     Campaign,
 )
-from t_shirt_delivery.models import (
-    BoxRequest,
-    PackageTransaction,
-    SubsidiaryBox,
-)
+# from t_shirt_delivery.models import (
+#     BoxRequest,
+#     PackageTransaction,
+#     SubsidiaryBox,
+# )
 from .models.company import CompanyInCampaign
 from .rest import (
     CompaniesDeserializer,
@@ -433,73 +433,73 @@ class MemberView(viewsets.ModelViewSet, CompanyAdminMixin):
         instance.save()
 
 
-class BoxRequestView(APIView, CompanyAdminMixin):
-    permission_classes = [permissions.IsAuthenticated]
+# class BoxRequestView(APIView, CompanyAdminMixin):
+#     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        """List subsidiaries with active box requests"""
-        company_admin = self.ca()
+#     def get(self, request):
+#         """List subsidiaries with active box requests"""
+#         company_admin = self.ca()
 
-        subsidiary_ids = list(
-            Subsidiary.objects.filter(
-                box_requests__company_admin=company_admin
-            ).values_list("id", flat=True)
-        )
-        return Response({"subsidiary_ids": subsidiary_ids})
+#         subsidiary_ids = list(
+#             Subsidiary.objects.filter(
+#                 box_requests__company_admin=company_admin
+#             ).values_list("id", flat=True)
+#         )
+#         return Response({"subsidiary_ids": subsidiary_ids})
 
-    @transaction.atomic
-    def post(self, request):
-        """Bulk create box requests for subsidiaries"""
-        company_admin = self.ca()
+#     @transaction.atomic
+#     def post(self, request):
+#         """Bulk create box requests for subsidiaries"""
+#         company_admin = self.ca()
 
-        created_ids = []
-        for sub_id in request.data["subsidiary_ids"]:
-            subsidiary = get_object_or_404(
-                Subsidiary, id=sub_id, company=company_admin.administrated_company
-            )
+#         created_ids = []
+#         for sub_id in request.data["subsidiary_ids"]:
+#             subsidiary = get_object_or_404(
+#                 Subsidiary, id=sub_id, company=company_admin.administrated_company
+#             )
 
-            _, created = BoxRequest.objects.get_or_create(
-                company_admin=company_admin, subsidiary=subsidiary
-            )
-            if created:
-                created_ids.append(sub_id)
+#             _, created = BoxRequest.objects.get_or_create(
+#                 company_admin=company_admin, subsidiary=subsidiary
+#             )
+#             if created:
+#                 created_ids.append(sub_id)
 
-        return Response(
-            {
-                "message": f"Created {len(created_ids)} box requests",
-                "added_subsidiary_ids": created_ids,
-            },
-            status=status.HTTP_201_CREATED,
-        )
+#         return Response(
+#             {
+#                 "message": f"Created {len(created_ids)} box requests",
+#                 "added_subsidiary_ids": created_ids,
+#             },
+#             status=status.HTTP_201_CREATED,
+#         )
 
 
-class BoxRequestRemoveView(APIView, CompanyAdminMixin):
-    permission_classes = [permissions.IsAuthenticated]
+# class BoxRequestRemoveView(APIView, CompanyAdminMixin):
+#     permission_classes = [permissions.IsAuthenticated]
 
-    @transaction.atomic
-    def post(self, request):
-        """Bulk delete box requests by subsidiary IDs"""
-        company_admin = self.ca()
+#     @transaction.atomic
+#     def post(self, request):
+#         """Bulk delete box requests by subsidiary IDs"""
+#         company_admin = self.ca()
 
-        # Get actual deleted subsidiary IDs from the box requests
-        deleted_subsidiaries = list(
-            BoxRequest.objects.filter(
-                company_admin=company_admin,
-                subsidiary_id__in=request.data["subsidiary_ids"],
-            ).values_list("subsidiary_id", flat=True)
-        )
+#         # Get actual deleted subsidiary IDs from the box requests
+#         deleted_subsidiaries = list(
+#             BoxRequest.objects.filter(
+#                 company_admin=company_admin,
+#                 subsidiary_id__in=request.data["subsidiary_ids"],
+#             ).values_list("subsidiary_id", flat=True)
+#         )
 
-        deleted_count, _ = BoxRequest.objects.filter(
-            subsidiary_id__in=deleted_subsidiaries
-        ).delete()
+#         deleted_count, _ = BoxRequest.objects.filter(
+#             subsidiary_id__in=deleted_subsidiaries
+#         ).delete()
 
-        return Response(
-            {
-                "message": f"Deleted {deleted_count} box requests",
-                "deleted_subsidiary_ids": deleted_subsidiaries,
-            },
-            status=status.HTTP_200_OK,
-        )
+#         return Response(
+#             {
+#                 "message": f"Deleted {deleted_count} box requests",
+#                 "deleted_subsidiary_ids": deleted_subsidiaries,
+#             },
+#             status=status.HTTP_200_OK,
+#         )
 
 
 class OrganizationAdminOrganizationUserAttendanceSerializer(
@@ -613,174 +613,174 @@ class OrganizationAdminOrganizationTeamsSerializer(serpy.Serializer):
     )
 
 
-class OrganizationAdminPackageTransactionSerializer(serpy.Serializer):
-    t_shirt_size = EmptyStrField()
-    name = serpy.StrField(attr="user_attendance.name", call=True)
+# class OrganizationAdminPackageTransactionSerializer(serpy.Serializer):
+#     t_shirt_size = EmptyStrField()
+#     name = serpy.StrField(attr="user_attendance.name", call=True)
 
 
-class OrganizationAdminOrganizationTeamPackageSerializer(serpy.Serializer):
-    dispatched = serpy.BoolField()
-    package_transactions = RequestSpecificField(
-        lambda team_package, req: [
-            OrganizationAdminPackageTransactionSerializer(
-                package_transaction, context={"request": req}
-            ).data
-            for package_transaction in PackageTransaction.objects.filter(
-                team_package=team_package, user_attendance__campaign=req.campaign
-            )
-        ]
-    )
+# class OrganizationAdminOrganizationTeamPackageSerializer(serpy.Serializer):
+#     dispatched = serpy.BoolField()
+#     package_transactions = RequestSpecificField(
+#         lambda team_package, req: [
+#             OrganizationAdminPackageTransactionSerializer(
+#                 package_transaction, context={"request": req}
+#             ).data
+#             for package_transaction in PackageTransaction.objects.filter(
+#                 team_package=team_package, user_attendance__campaign=req.campaign
+#             )
+#         ]
+#     )
 
 
-class OrganizationAdminOrganizationSubsidiaryBoxSerializer(serpy.Serializer):
-    dispatched = serpy.BoolField()
-    carrier_identification = EmptyStrField()
-    tracking_link = EmptyStrField(call=True)
-    modified = serpy.StrField()
-    team_packages = RequestSpecificField(
-        lambda subsidiary_box, req: [
-            OrganizationAdminOrganizationTeamPackageSerializer(
-                team_package, context={"request": req}
-            ).data
-            for team_package in subsidiary_box.teampackage_set.all()
-        ]
-    )
+# class OrganizationAdminOrganizationSubsidiaryBoxSerializer(serpy.Serializer):
+#     dispatched = serpy.BoolField()
+#     carrier_identification = EmptyStrField()
+#     tracking_link = EmptyStrField(call=True)
+#     modified = serpy.StrField()
+#     team_packages = RequestSpecificField(
+#         lambda subsidiary_box, req: [
+#             OrganizationAdminOrganizationTeamPackageSerializer(
+#                 team_package, context={"request": req}
+#             ).data
+#             for team_package in subsidiary_box.teampackage_set.all()
+#         ]
+#     )
 
 
-class OrganizationAdminOrganizationSubsidiariesSerializer(serpy.Serializer):
-    teams = SubsidiaryInCampaignField(
-        lambda sic, req: [
-            OrganizationAdminOrganizationTeamsSerializer(
-                team, context={"request": req}
-            ).data
-            for team in sic.teams
-        ]
-    )
-    boxes = SubsidiaryInCampaignField(
-        lambda sic, req: [
-            OrganizationAdminOrganizationSubsidiaryBoxSerializer(
-                subsidiary_box, context={"request": req}
-            ).data
-            for subsidiary_box in SubsidiaryBox.objects.filter(
-                subsidiary=sic.subsidiary,
-                delivery_batch__campaign=req.campaign,
-            )
-        ]
-    )
-    id = serpy.IntField()
-    name = serpy.StrField(call=True)
-    address = AddressSerializer()
-    icon_url = serpy.Field(call=True)
+# class OrganizationAdminOrganizationSubsidiariesSerializer(serpy.Serializer):
+#     teams = SubsidiaryInCampaignField(
+#         lambda sic, req: [
+#             OrganizationAdminOrganizationTeamsSerializer(
+#                 team, context={"request": req}
+#             ).data
+#             for team in sic.teams
+#         ]
+#     )
+#     boxes = SubsidiaryInCampaignField(
+#         lambda sic, req: [
+#             OrganizationAdminOrganizationSubsidiaryBoxSerializer(
+#                 subsidiary_box, context={"request": req}
+#             ).data
+#             for subsidiary_box in SubsidiaryBox.objects.filter(
+#                 subsidiary=sic.subsidiary,
+#                 delivery_batch__campaign=req.campaign,
+#             )
+#         ]
+#     )
+#     id = serpy.IntField()
+#     name = serpy.StrField(call=True)
+#     address = AddressSerializer()
+#     icon_url = serpy.Field(call=True)
 
 
-class OrganizationAdminOrganizationSerializer(serpy.Serializer):
-    name = serpy.StrField()
-    address = AddressSerializer()
-    ico = NullIntField()
-    dic = EmptyStrField()
-    active = serpy.BoolField()
-    has_filled_contact_information = serpy.BoolField(
-        attr="has_filled_contact_information",
-        call=True,
-    )
-    subsidiaries = RequestSpecificField(
-        lambda organization, req: [
-            OrganizationAdminOrganizationSubsidiariesSerializer(
-                sub, context={"request": req}
-            ).data
-            for sub in organization.subsidiaries.filter(
-                teams__campaign__slug=req.subdomain, active=True
-            ).distinct()
-        ]
-    )
+# class OrganizationAdminOrganizationSerializer(serpy.Serializer):
+#     name = serpy.StrField()
+#     address = AddressSerializer()
+#     ico = NullIntField()
+#     dic = EmptyStrField()
+#     active = serpy.BoolField()
+#     has_filled_contact_information = serpy.BoolField(
+#         attr="has_filled_contact_information",
+#         call=True,
+#     )
+#     subsidiaries = RequestSpecificField(
+#         lambda organization, req: [
+#             OrganizationAdminOrganizationSubsidiariesSerializer(
+#                 sub, context={"request": req}
+#             ).data
+#             for sub in organization.subsidiaries.filter(
+#                 teams__campaign__slug=req.subdomain, active=True
+#             ).distinct()
+#         ]
+#     )
 
 
-class OrganizationAdminOrganizationSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        return Company.objects.filter(
-            id__in=CompanyAdmin.objects.filter(
-                userprofile=self.request.user.userprofile,
-                company_admin_approved="approved",
-                campaign__slug=self.request.subdomain,
-                can_confirm_payments=True,
-                administrated_company__active=True,
-            ).values_list("administrated_company__id", flat=True)
-        )
+# class OrganizationAdminOrganizationSet(viewsets.ReadOnlyModelViewSet):
+#     def get_queryset(self):
+#         return Company.objects.filter(
+#             id__in=CompanyAdmin.objects.filter(
+#                 userprofile=self.request.user.userprofile,
+#                 company_admin_approved="approved",
+#                 campaign__slug=self.request.subdomain,
+#                 can_confirm_payments=True,
+#                 administrated_company__active=True,
+#             ).values_list("administrated_company__id", flat=True)
+#         )
 
-    serializer_class = OrganizationAdminOrganizationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class OrganizationAdminPaymentSerializer(serpy.Serializer):
-    id = serpy.IntField()
-    amount = serpy.IntField()
-    userprofile_id = RequestSpecificField(
-        lambda payment, req: payment.payment_user_attendance.userprofile.id
-    )
-    payment_status = serpy.IntField()
-    pay_type = serpy.StrField()
-    pay_category = serpy.StrField()
+#     serializer_class = OrganizationAdminOrganizationSerializer
+#     permission_classes = [permissions.IsAuthenticated]
 
 
-class OrganizationAdminInvoiceSerializer(serpy.Serializer):
-    id = serpy.IntField()
-    order_number = EmptyStrField()
-    total_amount = NullIntField()
-    fakturoid_invoice_url = EmptyStrField()
-    exposure_date = EmptyStrField()
-    paid_date = EmptyStrField()
-    company_pais_benefitial_fee = serpy.BoolField()
-    client_note = EmptyStrField()
-    payments = RequestSpecificField(
-        lambda invoice, req: [
-            OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
-            for payment in invoice.payment_set.all()
-        ]
-    )
+# class OrganizationAdminPaymentSerializer(serpy.Serializer):
+#     id = serpy.IntField()
+#     amount = serpy.IntField()
+#     userprofile_id = RequestSpecificField(
+#         lambda payment, req: payment.payment_user_attendance.userprofile.id
+#     )
+#     payment_status = serpy.IntField()
+#     pay_type = serpy.StrField()
+#     pay_category = serpy.StrField()
 
 
-class OrganizationAdminInvoicesSerializer(serpy.Serializer):
-    payments_to_invoice = RequestSpecificField(
-        lambda organization, req: [
-            OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
-            for payment in Payment.objects.filter(
-                pay_type="fc",
-                status=Status.COMPANY_ACCEPTS,
-                user_attendance__team__subsidiary__company=organization,
-                user_attendance__campaign__slug=req.subdomain,
-            )
-        ]
-    )
-    invoices = RequestSpecificField(
-        lambda organization, req: [
-            OrganizationAdminInvoiceSerializer(
-                payment.invoice, context={"request": req}
-            ).data
-            for payment in Payment.objects.filter(
-                Q(status=Status.INVOICE_MADE) | Q(status=Status.INVOICE_PAID),
-                pay_type="fc",
-                user_attendance__team__subsidiary__company=organization,
-                user_attendance__campaign__slug=req.subdomain,
-                invoice__isnull=False,
-            ).distinct("invoice_id")
-        ]
-    )
+# class OrganizationAdminInvoiceSerializer(serpy.Serializer):
+#     id = serpy.IntField()
+#     order_number = EmptyStrField()
+#     total_amount = NullIntField()
+#     fakturoid_invoice_url = EmptyStrField()
+#     exposure_date = EmptyStrField()
+#     paid_date = EmptyStrField()
+#     company_pais_benefitial_fee = serpy.BoolField()
+#     client_note = EmptyStrField()
+#     payments = RequestSpecificField(
+#         lambda invoice, req: [
+#             OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
+#             for payment in invoice.payment_set.all()
+#         ]
+#     )
 
 
-class OrganizationAdminInvoiceSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        return Company.objects.filter(
-            id__in=CompanyAdmin.objects.filter(
-                userprofile=self.request.user.userprofile,
-                company_admin_approved="approved",
-                campaign__slug=self.request.subdomain,
-                can_confirm_payments=True,
-                administrated_company__active=True,
-            ).values_list("administrated_company__id", flat=True)
-        )
+# class OrganizationAdminInvoicesSerializer(serpy.Serializer):
+#     payments_to_invoice = RequestSpecificField(
+#         lambda organization, req: [
+#             OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
+#             for payment in Payment.objects.filter(
+#                 pay_type="fc",
+#                 status=Status.COMPANY_ACCEPTS,
+#                 user_attendance__team__subsidiary__company=organization,
+#                 user_attendance__campaign__slug=req.subdomain,
+#             )
+#         ]
+#     )
+#     invoices = RequestSpecificField(
+#         lambda organization, req: [
+#             OrganizationAdminInvoiceSerializer(
+#                 payment.invoice, context={"request": req}
+#             ).data
+#             for payment in Payment.objects.filter(
+#                 Q(status=Status.INVOICE_MADE) | Q(status=Status.INVOICE_PAID),
+#                 pay_type="fc",
+#                 user_attendance__team__subsidiary__company=organization,
+#                 user_attendance__campaign__slug=req.subdomain,
+#                 invoice__isnull=False,
+#             ).distinct("invoice_id")
+#         ]
+#     )
 
-    serializer_class = OrganizationAdminInvoicesSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+# class OrganizationAdminInvoiceSet(viewsets.ReadOnlyModelViewSet):
+#     def get_queryset(self):
+#         return Company.objects.filter(
+#             id__in=CompanyAdmin.objects.filter(
+#                 userprofile=self.request.user.userprofile,
+#                 company_admin_approved="approved",
+#                 campaign__slug=self.request.subdomain,
+#                 can_confirm_payments=True,
+#                 administrated_company__active=True,
+#             ).values_list("administrated_company__id", flat=True)
+#         )
+
+#     serializer_class = OrganizationAdminInvoicesSerializer
+#     permission_classes = [permissions.IsAuthenticated]
 
 
 class CompanyAddressDeserializer(serializers.Serializer):

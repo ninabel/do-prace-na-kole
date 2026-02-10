@@ -33,7 +33,8 @@ from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
 from celery.schedules import crontab
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from model_utils import Choices
 
 from django.apps import AppConfig
@@ -198,7 +199,6 @@ MIDDLEWARE = [
     "dpnk.middleware.UserAttendanceMiddleware",
     "dpnk.middleware.MobileAppIntegration",
     "dpnk.votes.SecretBallotUserMiddleware",
-    "raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware",
 ]
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.open_id.OpenIdAuth",
@@ -266,7 +266,7 @@ TEMPLATES = [
         "DIRS": [
             normpath(PROJECT_ROOT, "templates"),
             normpath(PROJECT_ROOT, "apps/dpnk/templates"),
-            normpath(PROJECT_ROOT, "apps/t_shirt_delivery/templates"),
+            # normpath(PROJECT_ROOT, "apps/t_shirt_delivery/templates"),
             normpath(PROJECT_ROOT, "registration-templates/"),
         ],
         "OPTIONS": {
@@ -333,12 +333,12 @@ INSTALLED_APPS = [
     "django_prices",
     "coupons",
     "dpnk",
-    # "t_shirt_delivery",
+    "t_shirt_delivery",
     # "stravasync",
     "psc",
     "stale_notifications",
     "motivation_messages",
-    # "donation_chooser",
+    "donation_chooser",
     "smart_selects",
     "composite_field",
     "softhyphen",
@@ -372,7 +372,6 @@ INSTALLED_APPS = [
     "denorm",
     "subdomains",
     "selectable",
-    "raven.contrib.django.raven_compat",
     "bootstrap4",
     "django_admin_filters",
     "storages",
@@ -582,8 +581,7 @@ LOGGING = {
     "handlers": {
         "sentry": {
             "level": "WARNING",
-            "class": "raven.contrib.django.raven_compat.handlers.SentryHandler",
-            "tags": {"custom-tag": "x"},
+            "class": "sentry_sdk.integrations.logging.SentryHandler",
         },
         "console": {
             "level": "WARNING",
@@ -624,7 +622,7 @@ LOGGING = {
             "handlers": ["console", "logfile", "mail_admins", "sentry"],
             "level": "INFO",
         },
-        "raven": {
+        "sentry": {
             "level": "DEBUG",
             "handlers": ["console", "logfile", "mail_admins", "sentry"],
             "propagate": False,
@@ -639,16 +637,11 @@ LOGGING = {
     },
 }
 
-RAVEN_CONFIG = {
-    "dsn": os.environ.get("DPNK_RAVEN_DNS", ""),
-    "string_max_length": 10000,
-}
-
-try:
-    with open("static/version.txt") as f:
-        RAVEN_CONFIG["release"] = f.readline().strip()
-except FileNotFoundError:
-    pass
+sentry_sdk.init(
+    dsn=os.environ.get("DPNK_SENTRY_DSN", ""),
+    integrations=[DjangoIntegration()],
+    send_default_pii=True,
+)
 
 GOOGLE_TAG_ID = os.environ.get("DPNK_GOOGLE_TAG_ID", "")
 

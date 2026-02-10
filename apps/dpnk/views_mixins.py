@@ -28,7 +28,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from dpnk import models
-from dpnk import notification_types
+from apps.dpnk import notification_types
 
 from .util import mark_safe_lazy
 from .views_permission_mixins import MustBeInRegistrationPhaseMixin

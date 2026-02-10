@@ -201,30 +201,15 @@ class UserAttendanceResource(resources.ModelResource):
         fields = [
             "id",
             "campaign",
-            "campaign__slug",
+            "campaign_slug",
             "distance",
             "frequency",
             "trip_length_total",
             "team",
-            "team__name",
             "approved_for_team",
-            "t_shirt_size",
-            "t_shirt_size__name",
-            "team__subsidiary__city__name",
+            # "t_shirt_size",
             "userprofile",
-            "userprofile__language",
-            "userprofile__telephone",
-            "userprofile__user__id",
-            "userprofile__user__first_name",
-            "userprofile__user__last_name",
-            "userprofile__user__username",
-            "userprofile__user__email",
-            "userprofile__occupation",
-            "userprofile__age_group",
-            "userprofile__mailing_opt_in",
-            "userprofile__telephone_opt_in",
             "subsidiary_name",
-            "team__subsidiary__company__name",
             "company_admin_emails",
             "created",
             "payment_date",
@@ -233,6 +218,44 @@ class UserAttendanceResource(resources.ModelResource):
             "payment_amount",
         ]
         export_order = fields
+    def dehydrate_campaign_slug(self, obj):
+        return getattr(obj.campaign, "slug", None)
+
+    def dehydrate_team_name(self, obj):
+        return getattr(obj.team, "name", None)
+
+    def dehydrate_city_name(self, obj):
+        try:
+            return obj.team.subsidiary.city.name
+        except AttributeError:
+            return None
+
+    def dehydrate_subsidiary_name(self, obj):
+        try:
+            return obj.team.subsidiary.name
+        except AttributeError:
+            return None
+
+    def dehydrate_payment_date(self, obj):
+        return obj.payment_complete_date
+
+    def dehydrate_payment_status(self, obj):
+        return obj.payment_status
+
+    def dehydrate_payment_type(self, obj):
+        try:
+            return obj.representative_payment.pay_type
+        except AttributeError:
+            return None
+
+    def dehydrate_payment_amount(self, obj):
+        try:
+            return obj.representative_payment.amount
+        except AttributeError:
+            return None
+
+    def dehydrate_company_admin_emails(self, obj):
+        return obj.company_admin_emails
 
     subsidiary_name = fields.Field(readonly=True, attribute="team__subsidiary__name")
     payment_date = fields.Field(readonly=True, attribute="payment_complete_date")
