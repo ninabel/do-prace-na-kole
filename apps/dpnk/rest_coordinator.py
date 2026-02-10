@@ -771,7 +771,11 @@ class OrganizationAdminOrganizationTeamsSerializer(serpy.Serializer):
 
 # class OrganizationAdminOrganizationSerializer(serpy.Serializer):
 #     name = serpy.StrField()
-#     address = AddressSerializer()
+#     street = EmptyStrField(attr="address.street")
+#     street_number = EmptyStrField(attr="address.street_number")
+#     recipient = EmptyStrField(attr="address.recipient")
+#     psc = EmptyStrField(attr="address.psc")
+#     city = EmptyStrField(attr="address.city")
 #     ico = NullIntField()
 #     dic = EmptyStrField()
 #     active = serpy.BoolField()
@@ -784,9 +788,7 @@ class OrganizationAdminOrganizationTeamsSerializer(serpy.Serializer):
 #             OrganizationAdminOrganizationSubsidiariesSerializer(
 #                 sub, context={"request": req}
 #             ).data
-#             for sub in organization.subsidiaries.filter(
-#                 teams__campaign__slug=req.subdomain, active=True
-#             ).distinct()
+#             for sub in organization.subsidiaries.filter(active=True)
 #         ]
 #     )
 
