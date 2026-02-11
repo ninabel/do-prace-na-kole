@@ -753,6 +753,7 @@ class CompetitionSerializer(serpy.Serializer):
     results = serpy.MethodField()
 
     id = serpy.IntField()
+    company = EmptyStrField()
     name = serpy.StrField()
     slug = serpy.StrField()
     competitor_type = serpy.StrField()
@@ -798,6 +799,7 @@ class CompetitionDeserializer(serializers.ModelSerializer):
     class Meta:
         model = Competition
         fields = [
+            "company",
             "name",
             "url",
             "competition_type",
