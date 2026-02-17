@@ -200,6 +200,7 @@ MIDDLEWARE = [
     "author.middlewares.AuthorDefaultBackendMiddleware",
     "dpnk.middleware.UserAttendanceMiddleware",
     "dpnk.middleware.MobileAppIntegration",
+    "dpnk.middleware.ExceptionMiddleware",
     "dpnk.votes.SecretBallotUserMiddleware",
 ]
 AUTHENTICATION_BACKENDS = (
