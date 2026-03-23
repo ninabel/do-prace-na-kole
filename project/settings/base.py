@@ -205,6 +205,7 @@ MIDDLEWARE = [
     "dpnk.middleware.UserAttendanceMiddleware",
     "dpnk.middleware.MobileAppIntegration",
     "dpnk.middleware.ExceptionMiddleware",
+    "dpnk.middleware.RedirectToRtwbbUrlMiddleware",
     "dpnk.votes.SecretBallotUserMiddleware",
 ]
 AUTHENTICATION_BACKENDS = (
