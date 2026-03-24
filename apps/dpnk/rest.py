@@ -3951,6 +3951,7 @@ class DataReportResults(CompanyAdminMixin, APIView):
     3. Organization/city performance (Company/City organizator),
     4. Orgaznizations review
     5. Organization coordinator
+    6. City coordinator
     """
 
     permission_classes = [permissions.IsAuthenticated]
@@ -3975,7 +3976,7 @@ class DataReportResults(CompanyAdminMixin, APIView):
                         company_admin.campaign.year,
                     )
                 # With user attendance and is not city admin
-                elif not user_attendance.userprofile.administrated_cities.all():
+                elif not user_attendance.userprofile.administrated_cities.last():
                     url = concat_all(
                         base_url,
                         "?org=",
@@ -3987,7 +3988,7 @@ class DataReportResults(CompanyAdminMixin, APIView):
             elif (
                 not company_admin
                 and user_attendance
-                and user_attendance.userprofile.administrated_cities.all()
+                and user_attendance.userprofile.administrated_cities.last()
             ):
                 url = concat_all(
                     base_url,
@@ -3998,7 +3999,7 @@ class DataReportResults(CompanyAdminMixin, APIView):
             # Organization admin (registered/unregistered into challenge) or City admin
             elif company_admin or (
                 user_attendance
-                and user_attendance.userprofile.administrated_cities.all()
+                and user_attendance.userprofile.administrated_cities.last()
             ):
                 url = concat_all(
                     base_url,
@@ -4027,7 +4028,7 @@ class DataReportResults(CompanyAdminMixin, APIView):
             # Organization admin (registered/unregistered into challenge) or City admin
             if company_admin or (
                 user_attendance
-                and user_attendance.userprofile.administrated_cities.all()
+                and user_attendance.userprofile.administrated_cities.last()
             ):
                 url = concat_all(
                     base_url,
@@ -4086,6 +4087,17 @@ class DataReportResults(CompanyAdminMixin, APIView):
                 if user_attendance
                 else company_admin.administrated_company,
             )
+        elif "city-coordinator" == report_type:
+            city = user_attendance.userprofile.administrated_cities.last()
+            if city:
+                base_url = (
+                    settings.METABASE_DPNK_CITY_COORDINATOR_RESULTS_DATA_REPORT_URL
+                )
+                url = concat_all(
+                    base_url,
+                    "?city=",
+                    city,
+                )
 
         return Response({"data_report_url": url})
 
