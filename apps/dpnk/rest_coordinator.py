@@ -785,7 +785,8 @@ class OrganizationAdminOrganizationTeamsSerializer(serpy.Serializer):
 
 
 # class OrganizationAdminOrganizationSerializer(serpy.Serializer):
-#     name = serpy.StrField()
+#     id = serpy.IntField()
+#    name = serpy.StrField()
 #     street = EmptyStrField(attr="address.street")
 #     street_number = EmptyStrField(attr="address.street_number")
 #     recipient = EmptyStrField(attr="address.recipient")
