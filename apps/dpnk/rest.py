@@ -180,6 +180,8 @@ class CompanyAdminMixin(UserProfileMixin):
                 )
             except CompanyAdmin.DoesNotExist:
                 if raise_company_admin_does_not_exists_error:
+                    from .rest_coordinator import CompanyAdminDoesNotExist
+
                     raise CompanyAdminDoesNotExist
                 else:
                     self._company_admin = None
