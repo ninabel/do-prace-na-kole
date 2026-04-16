@@ -107,6 +107,7 @@ tornado = "<7"
 dj_anonymizer = "*"
 faker = "*"
 django-colorfield = "*"
+dj-fiobank-payments = {git = "https://github.com/auto-mat/dj-fiobank-payments.git"}
 asgiref = "*"
 django-dbtemplates = "*"
 django-reversion = "*"
