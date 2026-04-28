@@ -1559,6 +1559,7 @@ class CitySerializer(serpy.Serializer):
                     subsidiary__city=city,
                     campaign=req.campaign,
                 ).values_list("subsidiary", flat=True),
+                active=True,
             )
         ]
     )
@@ -2212,7 +2213,7 @@ class SubsidiariesSet(
     # fetches all subsidiaries from a given organization
     def get_queryset(self):
         organization_id = self.kwargs["organization_id"]
-        return Subsidiary.objects.filter(company_id=organization_id)
+        return Subsidiary.objects.filter(company_id=organization_id, active=True)
 
     def create(self, request, *args, **kwargs):
 
