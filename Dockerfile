@@ -15,8 +15,10 @@ RUN apt-get update && apt-get install -y curl && \
     curl -sSL https://install.python-poetry.org | python3 - && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY . /tmp/src
-RUN mv /tmp/src/* . \
+COPY . /app
+WORKDIR /app
+COPY monorepo/docker-base-image/pyproject.toml ./
+RUN poetry install --no-root --only main \
     && DPNK_SECRET_KEY="fake_key" DPNK_DEBUG_TOOLBAR=True DPNK_SILK=True poetry run python manage.py compilemessages \
     && DPNK_SECRET_KEY="fake_key" DPNK_DEBUG_TOOLBAR=True DPNK_SILK=True poetry run python manage.py collectstatic --noinput \
     && mkdir media logs -p \
