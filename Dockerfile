@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y curl && \
         g++ \
         gcc \
         python3-dev \
-        gdal-bin libgdal-dev && \
+        gdal-bin libgdal-dev \
+        gettext && \
     curl -sSL https://install.python-poetry.org | python3 - && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 

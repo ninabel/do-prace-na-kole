@@ -113,7 +113,7 @@ if DPNK_CACHE_REDIS_LOCATION is not None:
 else:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+            "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
             "LOCATION": "127.0.0.1:11211",
             "KEY_PREFIX": "dpnkch",
         },
@@ -199,6 +199,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "dpnk.middleware.SesameAuthenticationMiddleware",
     "dpnk.middleware.CeleryDenormMiddleware",
     "author.middlewares.AuthorDefaultBackendMiddleware",

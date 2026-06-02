@@ -19,13 +19,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from collections import OrderedDict
 
-from betterforms.multiform import MultiModelForm
-
 from django import forms
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from dpnk.forms import PrevNextMixin
+from dpnk.forms import PrevNextMixin, MultiModelForm
 from dpnk.models import PACKAGE_STATUSES, UserAttendance, UserProfile
 
 from .models import PackageTransaction, TShirtSize

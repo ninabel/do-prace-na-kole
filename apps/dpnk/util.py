@@ -41,7 +41,7 @@ from django.utils.functional import keep_lazy
 
 import geopy.distance
 
-from ipware.ip import get_real_ip
+from ipware.ip import get_client_ip
 
 from . import exceptions
 
@@ -124,9 +124,9 @@ def today():
     return _today()
 
 
-def get_client_ip(request):
+def get_client_ip_address(request):
     logger.info(request.META)
-    ip = get_real_ip(request)
+    ip, is_routable = get_client_ip(request)
     logger.info(f"IP address {ip}")
     if ip is not None:
         return ip

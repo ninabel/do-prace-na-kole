@@ -9,7 +9,6 @@ from gls import (
     CountryCode,
     GLS,
     Parcel,
-    ParcelProperty,
     PrinterType,
     Settings,
 )
@@ -97,16 +96,26 @@ class MyGLS:
             else:
                 parcel_prop = parcel_property
 
+            # mygls-rest-client v1 uses create_parcel(pickup_from, deliver_to, pickup_date,
+            # reference, count, content, cod_amount, cod_reference, services)
+            # parcel_prop previously held dimensions/weight; the new API expects a
+            # list of Service objects in `services` and separate COD fields.
+            services = []
+            cod_amount = parcel_prop.get("CODAmount") if isinstance(parcel_prop, dict) else None
+            cod_reference = parcel_prop.get("CODReference") if isinstance(parcel_prop, dict) else None
+
             parcel = self._gls.create_parcel(
                 pickup_from=Address(**pickup_addr),
                 deliver_to=Address(**delivery_addr),
-                parcel_property=ParcelProperty(**parcel_prop),
                 pickup_date=pickup_date,
                 reference=reference[idx]
                 if isinstance(reference, (list, tuple))
                 else reference,
                 content=content[idx] if isinstance(content, (list, tuple)) else content,
                 count=count[idx] if isinstance(count, (list, tuple)) else count,
+                cod_amount=cod_amount or 0,
+                cod_reference=cod_reference or "",
+                services=services,
             )
             self._parcels.append(parcel)
 
