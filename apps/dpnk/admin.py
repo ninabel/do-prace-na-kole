@@ -465,7 +465,7 @@ class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 
 @admin.register(models.Competition)
 class CompetitionAdmin(
-    FormRequestMixin, CityAdminMixin, ImportExportMixin, RelatedFieldAdmin
+    SortableAdminMixin, FormRequestMixin, CityAdminMixin, ImportExportMixin, RelatedFieldAdmin
 ):
     list_display = (
         "name",
@@ -1175,7 +1175,7 @@ class ChoiceInline(SortableInlineAdminMixin, admin.TabularInline):
 
 
 @admin.register(models.ChoiceType)
-class ChoiceTypeAdmin(admin.ModelAdmin):
+class ChoiceTypeAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("name", "competition", "universal")
     inlines = [ChoiceInline]
     list_filter = (

@@ -395,7 +395,7 @@ INSTALLED_APPS = [
     "secretballot",
     "sitetree",
     "sitetree_modeltranslation",
-    "likes",
+    "apps.likes",
     "colorfield",
     "social_django",
     "fm",
@@ -438,7 +438,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
-    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.openapi.AutoSchema",
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
     "DEFAULT_VERSION": "v1",
     "ALLOWED_VERSIONS": ["v1", "v2"],
@@ -453,12 +453,6 @@ REST_AUTH = {
     "JWT_AUTH_HTTPONLY": False,
 }
 
-REDACTOR_OPTIONS = {
-    "plugins": ["source"],
-    "formatting": ["div", "p", "blockquote", "pre", "h4", "h5"],
-    "imageResizable": "true",
-    "imagePosition": "true",
-}
 BLEACH_ALLOWED_TAGS = [
     "a",
     "b",

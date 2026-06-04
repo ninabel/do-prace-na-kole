@@ -3,7 +3,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib.gis import admin
 from django.http import HttpResponse
-from django.urls import path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 
 from dpnk.rest import router, PhotoURLGet
@@ -11,11 +11,9 @@ from dpnk.rest import router, PhotoURLGet
 import notifications.urls
 
 import rest_framework.authtoken.views
-from rest_framework.documentation import include_docs_urls
 
 admin.autodiscover()
 
-from django.urls import include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -51,16 +49,19 @@ urlpatterns = [
     path("oauth2/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path("admin_tools_stats/", include("admin_tools_stats.urls")),
     path("photologue/", include("photologue.urls", namespace="photologue")),
-    path("redactor/", include("redactor.urls")),
     path("nested_admin/", include("nested_admin.urls")),
     path("rest/", include(router.urls)),
     re_path(r"^rest/photo-url/(?P<photo_url>.+)", PhotoURLGet.as_view()),
-    path("likes/", include("likes.urls")),
+    path("likes/", include("apps.likes.urls")),
     path("avatar/", include("avatar.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api-token-auth/", rest_framework.authtoken.views.obtain_auth_token),
     path("dj-rest-auth/", include("dj_rest_auth.urls")),
-    re_path(r"^rest-docs/", include_docs_urls(title="Do práce na kole API")),
+    path(
+        "rest-docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-docs",
+    ),
     path("", include("dpnk.urls")),
     path("coupons/", include("coupons.urls")),
     path("donation/", include("donation_chooser.urls")),

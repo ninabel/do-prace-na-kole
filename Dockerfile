@@ -20,7 +20,11 @@ COPY . /app
 WORKDIR /app
 COPY monorepo/docker-base-image/pyproject.toml ./
 RUN poetry install --no-root --only main \
-    && DPNK_SECRET_KEY="fake_key" DPNK_DEBUG_TOOLBAR=True DPNK_SILK=True poetry run python manage.py compilemessages \
+    && for d in apps registration-templates avatar_locale project/settings; do \
+         if [ -d "$d" ]; then \
+           cd "$d" && DPNK_SECRET_KEY="fake_key" DPNK_DEBUG_TOOLBAR=True DPNK_SILK=True poetry run python /app/manage.py compilemessages && cd /app; \
+         fi; \
+       done \
     && DPNK_SECRET_KEY="fake_key" DPNK_DEBUG_TOOLBAR=True DPNK_SILK=True poetry run python manage.py collectstatic --noinput \
     && mkdir media logs -p \
     && chmod +x wsgi.py

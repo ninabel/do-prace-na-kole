@@ -17,8 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from django.conf.urls import url, include
-from django.urls import path, re_path
+from django.urls import include, path, re_path
 from django.contrib.auth import views as django_views
 from django.utils.translation import gettext_lazy as _
 
@@ -75,7 +74,7 @@ from allauth.account.views import confirm_email
 
 
 urlpatterns = [
-    url(
+    re_path(
         r"^tym/$",
         views.ChangeTeamView.as_view(),
         name="zmenit_tym",

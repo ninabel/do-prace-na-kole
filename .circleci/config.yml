@@ -25,7 +25,7 @@ jobs:
          command: |
            if scripts/test_changes monorepo/docker-base-image ; then
              cd /home/circleci/project/monorepo/docker-base-image
-             docker build -t dopracenakole-base .
+             docker buildx build --load -t dopracenakole-base .
              cd /home/circleci/project
            fi
       - run:
@@ -46,7 +46,7 @@ jobs:
          command: |
            if scripts/test_changes --invert-match docs/ ; then
              cd /home/circleci/project
-             docker build -t dopracenakole .
+             docker buildx build --load -t dopracenakole .
            fi
       - run:
          name: Deploy test Docker image
@@ -63,7 +63,7 @@ jobs:
          name: Build test Docker image
          command: |
            if scripts/test_changes --invert-match docs/ ; then
-             docker build -t dopracenakole-test -f TestDockerfile .
+             docker buildx build --load -t dopracenakole-test -f TestDockerfile .
            fi
       - run:
          name: Start PostGIS container

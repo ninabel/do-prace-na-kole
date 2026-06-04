@@ -90,7 +90,6 @@ django-subdomains = {git = "https://github.com/PetrDlouhy/django-subdomains", re
 django-advanced-filters = "*"
 stravalib = "*"
 django-selectable = "*"
-django-likes = {git = "https://github.com/PetrDlouhy/django-likes.git", rev = "develop"}
 django-braces = "*"
 django-modeltranslation = "^0.19"
 django_polymorphic = "*"
@@ -98,7 +97,6 @@ Unidecode = "*"
 easy-thumbnails = "*"
 SQLAlchemy = "*"
 django_celery_beat = "*"
-django-stdnumfield = {git = "https://github.com/ninabel/django-stdnumfield.git"}
 PyPDF2 = "*"
 django-bootstrap4 = "26.1"
 html2text = "*"
@@ -134,7 +132,6 @@ django-notifications-hq = {git = "https://github.com/django-notifications/django
 django-adminfilters = "^2.7"
 django-admin-list-filters = "^1.3.1"
 django-allauth = "65.2.0"
-django-smmapdfs = {git = "https://github.com/ninabel/smmapdfs.git"}
 sentry-sdk = "^2.52.0"
 mygls-rest-client = "*"
 ipython = "8.15"

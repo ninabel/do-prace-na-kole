@@ -19,8 +19,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from django.dispatch import receiver
 
-from likes.exceptions import CannotVoteException
-from likes.signals import can_vote_test
+from apps.likes.exceptions import CannotVoteException
+from apps.likes.signals import can_vote_test
 
 from secretballot.middleware import SecretBallotIpUseragentMiddleware
 
