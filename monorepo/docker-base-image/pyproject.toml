@@ -70,7 +70,6 @@ django-favicon = "*"
 django-mass-edit = "*"
 django-ipware = "*"
 djangorestframework-gis = "*"
-django-table-select-widget = {git = "https://github.com/willardmr/DjangoTableSelectMultipleWidget.git", rev = "master"}
 redis = "*"
 django-isnull-list-filter = "*"
 django-redis = "*"

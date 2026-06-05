@@ -2396,21 +2396,6 @@ reference = "django20"
 resolved_reference = "4096c2dc82f9f5e511e8c8f78d31e804ac028b5d"
 
 [[package]]
-name = "django-table-select-widget"
-version = "1.1.0"
-description = "A Django widget for use with a ModelMultipleChoiceField to allow easy jQuery DataTables sorting and pagination by rendering the selector as a table."
-optional = false
-python-versions = "*"
-files = []
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/willardmr/DjangoTableSelectMultipleWidget.git"
-reference = "master"
-resolved_reference = "abc05a23bda976d855435c05fe019a22ef34d3c1"
-
-[[package]]
 name = "django-timezone-field"
 version = "7.2.1"
 description = "A Django app providing DB, form, and REST framework fields for zoneinfo and pytz timezone objects."
@@ -6384,4 +6369,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "3681156d0585b79facf6d90552bce1d4bf78baa650d474fb58feec8fe07ca5f1"
+content-hash = "035f610ab5be211faf94456cdbdc4efbc4462563ed07adf68cc6bf1874a4d302"

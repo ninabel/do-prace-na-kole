@@ -1,4 +1,3 @@
-from secretballot.models import Vote
 from django import template
 
 from apps.likes.utils import can_vote, likes_enabled

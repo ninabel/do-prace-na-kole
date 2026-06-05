@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
     mixins,
@@ -735,184 +735,184 @@ class OrganizationAdminOrganizationTeamsSerializer(serpy.Serializer):
     )
 
 
-# class OrganizationAdminPackageTransactionSerializer(serpy.Serializer):
-#     t_shirt_size = EmptyStrField()
-#     name = serpy.StrField(attr="user_attendance.name", call=True)
+class OrganizationAdminPackageTransactionSerializer(serpy.Serializer):
+    t_shirt_size = EmptyStrField()
+    name = serpy.StrField(attr="user_attendance.name", call=True)
 
 
-# class OrganizationAdminOrganizationTeamPackageSerializer(serpy.Serializer):
-#     dispatched = serpy.BoolField()
-#     package_transactions = RequestSpecificField(
-#         lambda team_package, req: [
-#             OrganizationAdminPackageTransactionSerializer(
-#                 package_transaction, context={"request": req}
-#             ).data
-#             for package_transaction in PackageTransaction.objects.filter(
-#                 team_package=team_package, user_attendance__campaign=req.campaign
-#             )
-#         ]
-#     )
+class OrganizationAdminOrganizationTeamPackageSerializer(serpy.Serializer):
+    dispatched = serpy.BoolField()
+    package_transactions = RequestSpecificField(
+        lambda team_package, req: [
+            OrganizationAdminPackageTransactionSerializer(
+                package_transaction, context={"request": req}
+            ).data
+            for package_transaction in PackageTransaction.objects.filter(
+                team_package=team_package, user_attendance__campaign=req.campaign
+            )
+        ]
+    )
 
 
-# class OrganizationAdminOrganizationSubsidiaryBoxSerializer(serpy.Serializer):
-#     dispatched = serpy.BoolField()
-#     carrier_identification = EmptyStrField()
-#     tracking_link = serpy.MethodField()
-#     modified = serpy.StrField()
-#     team_packages = RequestSpecificField(
-#         lambda subsidiary_box, req: [
-#             OrganizationAdminOrganizationTeamPackageSerializer(
-#                 team_package, context={"request": req}
-#             ).data
-#             for team_package in subsidiary_box.teampackage_set.all()
-#         ]
-#     )
+class OrganizationAdminOrganizationSubsidiaryBoxSerializer(serpy.Serializer):
+    dispatched = serpy.BoolField()
+    carrier_identification = EmptyStrField()
+    tracking_link = serpy.MethodField()
+    modified = serpy.StrField()
+    team_packages = RequestSpecificField(
+        lambda subsidiary_box, req: [
+            OrganizationAdminOrganizationTeamPackageSerializer(
+                team_package, context={"request": req}
+            ).data
+            for team_package in subsidiary_box.teampackage_set.all()
+        ]
+    )
 
-    # def get_tracking_link(self, obj):
-    #     html_link = obj.tracking_link()
-    #     if html_link:
-    #         soup = BeautifulSoup(html_link)
-    #         return soup.find("a").get("href")
-    #     return ""
-
-
-# class OrganizationAdminOrganizationSubsidiariesSerializer(serpy.Serializer):
-#     teams = SubsidiaryInCampaignField(
-#         lambda sic, req: [
-#             OrganizationAdminOrganizationTeamsSerializer(
-#                 team, context={"request": req}
-#             ).data
-#             for team in sic.teams
-#         ]
-#     )
-#     boxes = SubsidiaryInCampaignField(
-#         lambda sic, req: [
-#             OrganizationAdminOrganizationSubsidiaryBoxSerializer(
-#                 subsidiary_box, context={"request": req}
-#             ).data
-#             for subsidiary_box in SubsidiaryBox.objects.filter(
-#                 subsidiary=sic.subsidiary,
-#                 delivery_batch__campaign=req.campaign,
-#             )
-#         ]
-#     )
-#     id = serpy.IntField()
-#     name = serpy.StrField(call=True)
-#     address = AddressSerializer()
-#     icon_url = serpy.Field(call=True)
+    def get_tracking_link(self, obj):
+        html_link = obj.tracking_link()
+        if html_link:
+            soup = BeautifulSoup(html_link)
+            return soup.find("a").get("href")
+        return ""
 
 
-# class OrganizationAdminOrganizationSerializer(serpy.Serializer):
-#     id = serpy.IntField()
-#    name = serpy.StrField()
-#     street = EmptyStrField(attr="address.street")
-#     street_number = EmptyStrField(attr="address.street_number")
-#     recipient = EmptyStrField(attr="address.recipient")
-#     psc = EmptyStrField(attr="address.psc")
-#     city = EmptyStrField(attr="address.city")
-#     ico = EmptyStrField()
-#     dic = EmptyStrField()
-#     active = serpy.BoolField()
-#     has_filled_contact_information = serpy.BoolField(
-#         attr="has_filled_contact_information",
-#         call=True,
-#     )
-#     subsidiaries = RequestSpecificField(
-#         lambda organization, req: [
-#             OrganizationAdminOrganizationSubsidiariesSerializer(
-#                 sub, context={"request": req}
-#             ).data
-#             for sub in organization.subsidiaries.filter(active=True)
-#         ]
-#     )
+class OrganizationAdminOrganizationSubsidiariesSerializer(serpy.Serializer):
+    teams = SubsidiaryInCampaignField(
+        lambda sic, req: [
+            OrganizationAdminOrganizationTeamsSerializer(
+                team, context={"request": req}
+            ).data
+            for team in sic.teams
+        ]
+    )
+    boxes = SubsidiaryInCampaignField(
+        lambda sic, req: [
+            OrganizationAdminOrganizationSubsidiaryBoxSerializer(
+                subsidiary_box, context={"request": req}
+            ).data
+            for subsidiary_box in SubsidiaryBox.objects.filter(
+                subsidiary=sic.subsidiary,
+                delivery_batch__campaign=req.campaign,
+            )
+        ]
+    )
+    id = serpy.IntField()
+    name = serpy.StrField(call=True)
+    address = AddressSerializer()
+    icon_url = serpy.Field(call=True)
 
 
-# class OrganizationAdminOrganizationSet(viewsets.ReadOnlyModelViewSet):
-#     def get_queryset(self):
-#         return Company.objects.filter(
-#             id__in=CompanyAdmin.objects.filter(
-#                 userprofile=self.request.user.userprofile,
-#                 company_admin_approved="approved",
-#                 campaign__slug=self.request.subdomain,
-#                 can_confirm_payments=True,
-#                 administrated_company__active=True,
-#             ).values_list("administrated_company__id", flat=True)
-#         )
-
-#     serializer_class = OrganizationAdminOrganizationSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-
-# class OrganizationAdminPaymentSerializer(serpy.Serializer):
-#     id = serpy.IntField()
-#     amount = serpy.IntField()
-#     userprofile_id = RequestSpecificField(
-#         lambda payment, req: payment.payment_user_attendance.userprofile.id
-#     )
-#     payment_status = serpy.IntField()
-#     pay_type = serpy.StrField()
-#     pay_category = serpy.StrField()
+class OrganizationAdminOrganizationSerializer(serpy.Serializer):
+    id = serpy.IntField()
+   name = serpy.StrField()
+    street = EmptyStrField(attr="address.street")
+    street_number = EmptyStrField(attr="address.street_number")
+    recipient = EmptyStrField(attr="address.recipient")
+    psc = EmptyStrField(attr="address.psc")
+    city = EmptyStrField(attr="address.city")
+    ico = EmptyStrField()
+    dic = EmptyStrField()
+    active = serpy.BoolField()
+    has_filled_contact_information = serpy.BoolField(
+        attr="has_filled_contact_information",
+        call=True,
+    )
+    subsidiaries = RequestSpecificField(
+        lambda organization, req: [
+            OrganizationAdminOrganizationSubsidiariesSerializer(
+                sub, context={"request": req}
+            ).data
+            for sub in organization.subsidiaries.filter(active=True)
+        ]
+    )
 
 
-# class OrganizationAdminInvoiceSerializer(serpy.Serializer):
-#     id = serpy.IntField()
-#     order_number = EmptyStrField()
-#     total_amount = NullIntField()
-#     fakturoid_invoice_url = EmptyStrField()
-#     exposure_date = EmptyStrField()
-#     paid_date = EmptyStrField()
-#     company_pais_benefitial_fee = serpy.BoolField()
-#     client_note = EmptyStrField()
-#     payments = RequestSpecificField(
-#         lambda invoice, req: [
-#             OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
-#             for payment in invoice.payment_set.all()
-#         ]
-#     )
+class OrganizationAdminOrganizationSet(viewsets.ReadOnlyModelViewSet):
+    def get_queryset(self):
+        return Company.objects.filter(
+            id__in=CompanyAdmin.objects.filter(
+                userprofile=self.request.user.userprofile,
+                company_admin_approved="approved",
+                campaign__slug=self.request.subdomain,
+                can_confirm_payments=True,
+                administrated_company__active=True,
+            ).values_list("administrated_company__id", flat=True)
+        )
+
+    serializer_class = OrganizationAdminOrganizationSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
-# class OrganizationAdminInvoicesSerializer(serpy.Serializer):
-#     payments_to_invoice = RequestSpecificField(
-#         lambda organization, req: [
-#             OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
-#             for payment in Payment.objects.filter(
-#                 pay_type="fc",
-#                 status=Status.COMPANY_ACCEPTS,
-#                 user_attendance__team__subsidiary__company=organization,
-#                 user_attendance__campaign__slug=req.subdomain,
-#             )
-#         ]
-#     )
-#     invoices = RequestSpecificField(
-#         lambda organization, req: [
-#             OrganizationAdminInvoiceSerializer(
-#                 payment.invoice, context={"request": req}
-#             ).data
-#             for payment in Payment.objects.filter(
-#                 Q(status=Status.INVOICE_MADE) | Q(status=Status.INVOICE_PAID),
-#                 pay_type="fc",
-#                 user_attendance__team__subsidiary__company=organization,
-#                 user_attendance__campaign__slug=req.subdomain,
-#                 invoice__isnull=False,
-#             ).distinct("invoice_id")
-#         ]
-#     )
+class OrganizationAdminPaymentSerializer(serpy.Serializer):
+    id = serpy.IntField()
+    amount = serpy.IntField()
+    userprofile_id = RequestSpecificField(
+        lambda payment, req: payment.payment_user_attendance.userprofile.id
+    )
+    payment_status = serpy.IntField()
+    pay_type = serpy.StrField()
+    pay_category = serpy.StrField()
 
 
-# class OrganizationAdminInvoiceSet(viewsets.ReadOnlyModelViewSet):
-#     def get_queryset(self):
-#         return Company.objects.filter(
-#             id__in=CompanyAdmin.objects.filter(
-#                 userprofile=self.request.user.userprofile,
-#                 company_admin_approved="approved",
-#                 campaign__slug=self.request.subdomain,
-#                 can_confirm_payments=True,
-#                 administrated_company__active=True,
-#             ).values_list("administrated_company__id", flat=True)
-#         )
+class OrganizationAdminInvoiceSerializer(serpy.Serializer):
+    id = serpy.IntField()
+    order_number = EmptyStrField()
+    total_amount = NullIntField()
+    fakturoid_invoice_url = EmptyStrField()
+    exposure_date = EmptyStrField()
+    paid_date = EmptyStrField()
+    company_pais_benefitial_fee = serpy.BoolField()
+    client_note = EmptyStrField()
+    payments = RequestSpecificField(
+        lambda invoice, req: [
+            OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
+            for payment in invoice.payment_set.all()
+        ]
+    )
 
-#     serializer_class = OrganizationAdminInvoicesSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+
+class OrganizationAdminInvoicesSerializer(serpy.Serializer):
+    payments_to_invoice = RequestSpecificField(
+        lambda organization, req: [
+            OrganizationAdminPaymentSerializer(payment, context={"request": req}).data
+            for payment in Payment.objects.filter(
+                pay_type="fc",
+                status=Status.COMPANY_ACCEPTS,
+                user_attendance__team__subsidiary__company=organization,
+                user_attendance__campaign__slug=req.subdomain,
+            )
+        ]
+    )
+    invoices = RequestSpecificField(
+        lambda organization, req: [
+            OrganizationAdminInvoiceSerializer(
+                payment.invoice, context={"request": req}
+            ).data
+            for payment in Payment.objects.filter(
+                Q(status=Status.INVOICE_MADE) | Q(status=Status.INVOICE_PAID),
+                pay_type="fc",
+                user_attendance__team__subsidiary__company=organization,
+                user_attendance__campaign__slug=req.subdomain,
+                invoice__isnull=False,
+            ).distinct("invoice_id")
+        ]
+    )
+
+
+class OrganizationAdminInvoiceSet(viewsets.ReadOnlyModelViewSet):
+    def get_queryset(self):
+        return Company.objects.filter(
+            id__in=CompanyAdmin.objects.filter(
+                userprofile=self.request.user.userprofile,
+                company_admin_approved="approved",
+                campaign__slug=self.request.subdomain,
+                can_confirm_payments=True,
+                administrated_company__active=True,
+            ).values_list("administrated_company__id", flat=True)
+        )
+
+    serializer_class = OrganizationAdminInvoicesSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class CompanyAddressDeserializer(serializers.Serializer):

@@ -28,7 +28,7 @@ from django.utils.translation import gettext_lazy as _
 
 from selectable.forms.widgets import AutoCompleteSelectWidget
 
-from table_select_widget import TableSelectMultiple
+from .table_select_widget import TableSelectMultiple
 
 from . import models
 from .forms import (
